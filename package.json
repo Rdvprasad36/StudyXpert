@@ -1,0 +1,16 @@
+{
+  "name": "studyxpert-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start-all": "concurrently \"make dev -C gemini/gemini-fullstack-langgraph-quickstart-main\" \"serve -s frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "serve": "^14.2.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.51.0",
+    "toml": "^3.0.0"
+  }
+}

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StudyXpert Leaderboard</title>
+  <link rel="stylesheet" href="../styles/styles.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f1f5f9;
+    }
+
+    header {
+      background: #1e3a8a;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .leaderboard-container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e3a8a;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      text-align: center;
+      padding: 10px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    th {
+      background: #e0f2fe;
+    }
+
+    tr:nth-child(1) td {
+      background: #fef08a;
+      font-weight: bold;
+    }
+
+    .badge {
+      background: #2563eb;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .badge.gold {
+      background: gold;
+      color: black;
+    }
+
+    .badge.silver {
+      background: silver;
+      color: black;
+    }
+
+    .badge.bronze {
+      background: #cd7f32;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar"></div>
+  <script src="./components/navbar.js"></script>
+
+  <header>
+    <h1>🏆 StudyXpert Leaderboard</h1>
+    <p>Based on Internship, Job & Competition Participation</p>
+  </header>
+
+  <div class="leaderboard-container">
+    <h2>Top Performers</h2>
+    <table id="leaderboard">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>User</th>
+          <th>Internships</th>
+          <th>Jobs</th>
+          <th>Competitions</th>
+          <th>Total</th>
+          <th>Badge</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dynamic rows go here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Sample data (can be replaced by fetching from localStorage or DB)
+    const users = [
+      { name: "Alice", internships: 2, jobs: 1, competitions: 3 },
+      { name: "Bob", internships: 1, jobs: 3, competitions: 2 },
+      { name: "Charlie", internships: 4, jobs: 2, competitions: 1 },
+      { name: "David", internships: 0, jobs: 1, competitions: 1 },
+      { name: "Eva", internships: 3, jobs: 3, competitions: 4 }
+    ];
+
+    // Calculate total and sort
+    users.forEach(u => u.total = u.internships + u.jobs + u.competitions);
+    users.sort((a, b) => b.total - a.total);
+
+    const tbody = document.querySelector("#leaderboard tbody");
+
+    users.forEach((user, index) => {
+      const row = document.createElement("tr");
+      const badge = index === 0 ? "gold" : index === 1 ? "silver" : index === 2 ? "bronze" : "";
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${user.name}</td>
+        <td>${user.internships}</td>
+        <td>${user.jobs}</td>
+        <td>${user.competitions}</td>
+        <td>${user.total}</td>
+        <td>${badge ? `<span class="badge ${badge}">${badge.charAt(0).toUpperCase() + badge.slice(1)}</span>` : '-'}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  </script>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-about">
+        <h3>StudyXpert</h3>
+        <p>Your partner in academic excellence and career success.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../frontend/index.html">Home</a></li>
+          <li><a href="../frontend/aboutus.html">About Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <p>Email: support@studyexpert.com</p>
+        <p>Phone: +91 7382612327</p>
+        <p>Address: Vignan College, Duvvada</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 StudyXpert. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

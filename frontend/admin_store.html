@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Store - StudyXpert</title>
+  <link rel="stylesheet" href="../styles/styles.css" />
+  <script src="./components/navbar.js" defer></script>
+  <style>
+    body { background-color: #f9fafb; color: #333; font-family: Arial, sans-serif; }
+    .container { max-width: 900px; margin: 2rem auto; padding: 1rem; }
+    h1 { text-align: center; margin-bottom: 1rem; }
+    .folder-list, .file-list { border: 1px solid #ccc; padding: 1rem; border-radius: 8px; background: white; }
+    .folder-item, .file-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+    .folder-item:last-child, .file-item:last-child { border-bottom: none; }
+    button { background-color: #4f46e5; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; }
+    button:hover { background-color: #4338ca; }
+    input[type="text"] { padding: 0.3rem; width: 200px; margin-right: 0.5rem; }
+    .section-title { margin-top: 2rem; font-weight: bold; font-size: 1.2rem; }
+    .file-actions button { margin-left: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="container">
+    <h1>Admin Store - Manage Folders and Files</h1>
+
+    <section>
+      <div class="section-title">Folders</div>
+      <div>
+        <input type="text" id="new-folder-name" placeholder="New folder name" />
+        <button id="create-folder-btn">Create Folder</button>
+      </div>
+      <div class="folder-list" id="folder-list">
+        <!-- Folder items will be listed here -->
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">Files in Selected Folder</div>
+      <input type="file" id="file-upload" multiple />
+      <button id="upload-file-btn">Upload Files</button>
+      <div class="file-list" id="file-list">
+        <!-- File items will be listed here -->
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Placeholder data structure for folders and files
+    let folders = [];
+    let files = {};
+    let selectedFolder = null;
+
+    const folderListEl = document.getElementById('folder-list');
+    const fileListEl = document.getElementById('file-list');
+    const newFolderNameInput = document.getElementById('new-folder-name');
+    const createFolderBtn = document.getElementById('create-folder-btn');
+    const fileUploadInput = document.getElementById('file-upload');
+    const uploadFileBtn = document.getElementById('upload-file-btn');
+
+    function renderFolders() {
+      folderListEl.innerHTML = '';
+      folders.forEach(folder => {
+        const div = document.createElement('div');
+        div.className = 'folder-item';
+        div.textContent = folder;
+        div.style.cursor = 'pointer';
+        if (folder === selectedFolder) {
+          div.style.fontWeight = 'bold';
+          div.style.backgroundColor = '#e0e7ff';
+        }
+        div.onclick = () => {
+          selectedFolder = folder;
+          renderFolders();
+          renderFiles();
+        };
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delBtn.onclick = (e) => {
+          e.stopPropagation();
+          if (confirm(`Delete folder "${folder}"? This will delete all files inside.`)) {
+            folders = folders.filter(f => f !== folder);
+            delete files[folder];
+            if (selectedFolder === folder) selectedFolder = null;
+            renderFolders();
+            renderFiles();
+          }
+        };
+        div.appendChild(delBtn);
+        folderListEl.appendChild(div);
+      });
+    }
+
+    function renderFiles() {
+      fileListEl.innerHTML = '';
+      if (!selectedFolder) {
+        fileListEl.textContent = 'Select a folder to see files.';
+        return;
+      }
+      const folderFiles = files[selectedFolder] || [];
+      folderFiles.forEach((file, index) => {
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        div.textContent = file.name + ' (' + file.type + ')';
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'file-actions';
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delBtn.onclick = () => {
+          if (confirm(`Delete file "${file.name}"?`)) {
+            files[selectedFolder].splice(index, 1);
+            renderFiles();
+          }
+        };
+        actionsDiv.appendChild(delBtn);
+
+        div.appendChild(actionsDiv);
+        fileListEl.appendChild(div);
+      });
+    }
+
+    createFolderBtn.onclick = () => {
+      const folderName = newFolderNameInput.value.trim();
+      if (!folderName) {
+        alert('Folder name cannot be empty.');
+        return;
+      }
+      if (folders.includes(folderName)) {
+        alert('Folder already exists.');
+        return;
+      }
+      folders.push(folderName);
+      files[folderName] = [];
+      newFolderNameInput.value = '';
+      renderFolders();
+    };
+
+    uploadFileBtn.onclick = () => {
+      if (!selectedFolder) {
+        alert('Select a folder first.');
+        return;
+      }
+      const selectedFiles = Array.from(fileUploadInput.files);
+      if (selectedFiles.length === 0) {
+        alert('Select files to upload.');
+        return;
+      }
+      if (!files[selectedFolder]) files[selectedFolder] = [];
+      selectedFiles.forEach(file => {
+        files[selectedFolder].push({ name: file.name, type: file.type });
+      });
+      fileUploadInput.value = '';
+      renderFiles();
+    };
+
+    // Initial render
+    renderFolders();
+    renderFiles();
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+Project Structure Graph:
+
+1. Frontend:
+   - frontend/index.html
+     * Loads components/navbar.js
+     * Links to pages: about.html, internship.html, jobs.html, practice.html, competitions.html, posts.html, profile.html
+     * Uses styles from ../styles/styles.css
+     * Links to aichatbox/examprearation.html for exam preparation
+   - frontend/components/navbar.js
+   - frontend/pages/_app.js (likely main React app wrapper)
+   - frontend/utils/ (utility scripts)
+   - frontend/about.html, internship.html, jobs.html, practice.html, competitions.html, posts.html, profile.html (individual pages)
+
+2. Backend:
+   - backend/server.js
+     * Uses PostgreSQL database (studyxpert)
+     * Handles routes: /api/register, /api/login, /api/profile
+     * Placeholder for notes, PDFs, chat data routes
+   - backend/database/ (database related files, currently .gitkeep)
+   - backend/routes/ (API route handlers, not detailed here)
+
+3. Smart Storage Module:
+   - smartstorage/server/index.js
+     * Express server serving static files from smartstorage/public
+     * API routes: /api/files (files.js), /api/folders (folders.js), /api/posts (posts.js)
+   - smartstorage/server/models/
+     * db.js (database connection or ORM)
+     * files.js, folders.js, posts.js (data models)
+   - smartstorage/server/routes/
+     * files.js, folders.js, posts.js (route handlers)
+   - smartstorage/public/
+     * index.html (Smart Storage frontend)
+     * css/style.css
+     * js/api.js, index.js, storage.js (frontend scripts)
+   - smartstorage/public1/smart-storage.html (another frontend page, possibly related)
+
+4. Other:
+   - aichatbox/ (contains examprearation.html and other files, possibly a separate module)
+   - styles/ (global CSS files)
+
+Connections:
+- frontend/index.html interacts with backend/server.js APIs for user auth and data
+- smartstorage/public/index.html interacts with smartstorage/server/index.js APIs for file management
+- smartstorage/server/models and routes implement the backend logic for smartstorage APIs
+- backend/server.js connects to PostgreSQL database for user and app data
+- smartstorage/server likely uses file system storage for uploads and data
+
+This structure graph shows the main files and their connections in the project.

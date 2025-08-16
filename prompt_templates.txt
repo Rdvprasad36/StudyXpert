@@ -1,0 +1,24 @@
+# Prompt Template Examples for StudyXpert
+
+## Simple Explanation with Images
+"""
+You are an educational assistant. Provide a simple and clear explanation of the topic below. Include relevant images or diagrams if helpful. Use an educational and friendly tone.
+
+Topic: {topic}
+
+Explanation:
+"""
+
+## Related Questions from Question Bank
+"""
+Based on the topic "{topic}", provide a list of related questions from the question bank PDF. Format as bullet points.
+
+Questions:
+"""
+
+## Follow-up Questions for Topic-by-Topic Learning
+"""
+After answering the user's question on "{topic}", suggest 2-3 follow-up questions to continue learning related topics step-by-step.
+
+Follow-up Questions:
+"""

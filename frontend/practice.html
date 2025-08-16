@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice | StudyExpert</title>
+  <link rel="stylesheet" href="../styles/styles.css" />
+  <style>
+    /* WhatsApp-like theme */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ece5dd;
+      color: #111;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 1rem 2rem;
+    }
+    h1 {
+      color: #075e54;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .practice-list {
+      list-style: none;
+      padding: 0;
+    }
+    .practice-item {
+      border-bottom: 1px solid #ddd;
+      padding: 1rem 0;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .practice-item:hover {
+      background-color: #dcf8c6;
+    }
+    .practice-title {
+      font-weight: bold;
+      color: #128c7e;
+      margin-bottom: 0.3rem;
+    }
+    .practice-details {
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="container">
+    <h1>Practice Problems</h1>
+    <ul class="practice-list">
+      <li class="practice-item">
+        <div class="practice-title">Array Manipulation</div>
+        <div class="practice-details">Difficulty: Medium</div>
+      </li>
+      <li class="practice-item">
+        <div class="practice-title">String Parsing</div>
+        <div class="practice-details">Difficulty: Easy</div>
+      </li>
+      <li class="practice-item">
+        <div class="practice-title">Graph Traversal</div>
+        <div class="practice-details">Difficulty: Hard</div>
+      </li>
+    </ul>
+  </div>
+
+  <script src="./components/navbar.js"></script>
+</body>
+</html>

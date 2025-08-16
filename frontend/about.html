@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About VIIT Duvvada | StudyXpert</title>
+  <link rel="stylesheet" href="../styles/styles.css" />
+  <style>
+    /* --- Hero Section with Particles --- */
+    .hero {
+      position: relative;
+      margin-top: 60px;
+      height: 400px;
+      background: url('https://vignaniit.edu.in/assets/images/slider/slide1.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.6);
+      pointer-events: none;
+    }
+    .hero h2 {
+      position: relative; font-size: 2.5rem;
+      padding: 20px; border-radius: 10px;
+      background: rgba(152, 169, 207, 0.85);
+      z-index: 2;
+    }
+    .particle { position: absolute; border-radius: 50%; background: #74b9ff; opacity: 0.2; animation: move 20s linear infinite; }
+    @keyframes move {
+      0% { transform: translate3d(var(--x0), var(--y0), 0) scale(0.5); }
+      100% { transform: translate3d(var(--x1), var(--y1), 0) scale(0.5); }
+    }
+
+    /* --- Content Section --- */
+    .content {
+      padding: 60px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .content h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+    .content p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .video-container {
+      margin-top: 30px;
+      position: relative;
+      padding-bottom: 56.25%; height: 0;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    .video-container iframe {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+
+    /* --- Footer --- */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(223, 193, 193, 0.7);
+      margin-top: 40px;
+      font-size: 0.9rem;
+    }
+    @keyframes fadeBG {
+      0%,100% {background-position:0% 50%;}
+      50%      {background-position:100% 50%;}
+    }
+  </style>
+  <script>
+    // Redirect if not logged in
+    if (!localStorage.getItem('loggedInUser')) {
+      window.location.href = 'index.html';
+    }
+    // Generate particle elements
+    document.addEventListener('DOMContentLoaded', () => {
+      const hero = document.querySelector('.hero');
+      for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.classList.add('particle');
+        const x0 = Math.random() * 100 + 'vw';
+        const y0 = Math.random() * 100 + 'vh';
+        const x1 = (Math.random() - 0.5) * 200 + 'vw';
+        const y1 = (Math.random() - 0.5) * 200 + 'vh';
+        p.style.setProperty('--x0', x0);
+        p.style.setProperty('--y0', y0);
+        p.style.setProperty('--x1', x1);
+        p.style.setProperty('--y1', y1);
+        p.style.width = p.style.height = (5 + Math.random()*10) + 'px';
+        hero.appendChild(p);
+      }
+    });
+  </script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div id="navbar"></div>
+  <script src="./components/navbar.js"></script>
+
+  <section class="hero">
+    <h2>Vignan's Institute of Information Technology, Duvvada</h2>
+  </section>
+
+  <section class="content">
+    <h3>About VIIT</h3>
+    <p>Established in 2002, VIIT is an autonomous engineering college in Duvvada, Visakhapatnam, accredited by NBA & NAAC–A+, and ranked in the NIRF 201–300 band :contentReference[oaicite:7]{index=7}.</p>
+    <p>Spread across a serene 17‑acre campus, VIIT offers undergraduate and postgraduate programs — B.Tech (11 branches), M.Tech, MCA, and MBA. It is affiliated with JNTU‑GV and approved by AICTE & UGC :contentReference[oaicite:8]{index=8}.</p>
+    <p>Powered by experienced faculty, modern infrastructure, and a vibrant student community, VIIT conducts cultural fests, tech symposia, and strong placement drives. Over 1,100+ undergrads and 60+ postgrads were placed recently, with a median salary around ₹4.6 LPA :contentReference[oaicite:9]{index=9}.</p>
+
+    <h3>Campus Tour</h3>
+    <div class="video-container">
+      <iframe src="https://www.bing.com/videos/riverview/relatedvideo?&q=viit+college%2c+duvvada+ads&&mid=E3E09FA2430FC2B08E47E3E09FA2430FC2B08E47&&FORM=VRDGAR" title="VIIT Campus Tour" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </section>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+/* Green and Black Theme */
+.theme-green-black {
+    --primary-color: #00ff00;
+    --secondary-color: #008000;
+    --background-color: #000000;
+    --sidebar-bg: #111111;
+    --chat-bg: #0a0a0a;
+    --text-color: #ffffff;
+    --border-color: #333333;
+    --input-bg: #222222;
+    --hover-bg: #1a1a1a;
+}
+
+/* Green and White Theme */
+.theme-green-white {
+    --primary-color: #008000;
+    --secondary-color: #00ff00;
+    --background-color: #ffffff;
+    --sidebar-bg: #f8f9fa;
+    --chat-bg: #ffffff;
+    --text-color: #000000;
+    --border-color: #e0e0e0;
+    --input-bg: #ffffff;
+    --hover-bg: #f0f0f0;
+}
+
+.theme-toggle-btn {
+    background: none;
+    border: 2px solid var(--primary-color);
+    color: var(--text-color);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}

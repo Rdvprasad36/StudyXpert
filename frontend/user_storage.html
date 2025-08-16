@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Storage - StudyXpert</title>
+  <link rel="stylesheet" href="../styles/styles.css" />
+  <script src="./components/navbar.js" defer></script>
+  <style>
+    body { background-color: #f9fafb; color: #333; font-family: Arial, sans-serif; }
+    .container { max-width: 900px; margin: 2rem auto; padding: 1rem; }
+    h1 { text-align: center; margin-bottom: 1rem; }
+    .file-list { border: 1px solid #ccc; padding: 1rem; border-radius: 8px; background: white; }
+    .file-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+    .file-item:last-child { border-bottom: none; }
+    button { background-color: #4f46e5; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; }
+    button:hover { background-color: #4338ca; }
+    .file-actions button { margin-left: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <div class="container">
+    <h1>User Storage - My Saved Files</h1>
+
+    <section>
+      <div class="file-list" id="file-list">
+        <!-- User files will be listed here -->
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Placeholder user files data
+    let userFiles = [
+      { name: 'Lecture1.pdf', type: 'application/pdf', url: '#' },
+      { name: 'Chapter2.pptx', type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', url: '#' },
+      { name: 'Notes.docx', type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', url: '#' }
+    ];
+
+    const fileListEl = document.getElementById('file-list');
+
+    function renderFiles() {
+      fileListEl.innerHTML = '';
+      if (userFiles.length === 0) {
+        fileListEl.textContent = 'No files saved yet.';
+        return;
+      }
+      userFiles.forEach((file, index) => {
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        div.textContent = file.name + ' (' + file.type + ')';
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'file-actions';
+
+        const downloadBtn = document.createElement('button');
+        downloadBtn.textContent = 'Download';
+        downloadBtn.onclick = () => {
+          // For demo, just alert. Replace with actual download logic.
+          alert('Downloading ' + file.name);
+        };
+        actionsDiv.appendChild(downloadBtn);
+
+        div.appendChild(actionsDiv);
+        fileListEl.appendChild(div);
+      });
+    }
+
+    // Initial render
+    renderFiles();
+  </script>
+</body>
+</html>

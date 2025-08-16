@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us | StudyXpert</title>
+  <link rel="stylesheet" href="../styles/styles.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fdfce7;
+      color: #000000;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .bg-image-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 100%;
+      background-repeat: repeat;
+      background-size: contain;
+      opacity: 0.06;
+      z-index: -2;
+      animation: scrollBg 100s linear infinite;
+    }
+
+    .bg-image-layer.layer2 {
+      bottom: 0;
+      background-size: cover;
+      opacity: 0.04;
+      animation-duration: 140s;
+    }
+
+    @keyframes scrollBg {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+    .bubble {
+      position: absolute;
+      bottom: -100px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      animation: rise 20s infinite ease-in;
+      mix-blend-mode: screen;
+    }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(0.5); opacity: 0; }
+      50% { opacity: 0.4; }
+      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+    }
+
+    .about-container {
+      padding: 50px 40px;
+      text-align: center;
+    }
+
+    .title {
+      font-size: 40px;
+      font-weight: 900;
+      margin-bottom: 50px;
+      color: #2c3e50;
+    }
+
+    .team-row {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 20px;
+    }
+
+    .team-member {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      width: 220px;
+      min-width: 220px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .team-member:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      border: 3px solid #4ca1af;
+      transition: transform 0.3s ease;
+    }
+
+    .team-member:hover .profile-img {
+      transform: scale(1.1);
+    }
+
+    .member-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-top: 10px;
+    }
+
+    .member-role {
+      font-size: 14px;
+      color: #4ca1af;
+      margin: 5px 0 10px;
+      font-weight: 600;
+    }
+
+    .member-bio {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .footer {
+      background-color: #2c3e50;
+      color: #ffffff;
+      padding: 2rem 1rem 1rem;
+      margin-top: 50px;
+    }
+
+    .footer-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      max-width: 1100px;
+      margin: auto;
+      gap: 2rem;
+    }
+
+    .footer-container div {
+      flex: 1 1 250px;
+    }
+
+    .footer-about h3 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links h4,
+    .footer-contact h4 {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-links ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links ul li a {
+      color: #ffffff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links ul li a:hover {
+      color: #00bfff;
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 1rem;
+    }
+
+    .team-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .team-row {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+  <script>
+    if (!localStorage.getItem('loggedInUser')) {
+      window.location.href = 'index.html';
+    }
+  </script>
+</head>
+<body>
+
+  <div class="bg-image-layer" style="background-image: url('./assets/bg-pattern1.png');"></div>
+  <div class="bg-image-layer layer2" style="background-image: url('./assets/bg-pattern2.png');"></div>
+
+  <div class="background" id="bg"></div>
+
+  <div id="navbar"></div>
+
+  <div class="about-container">
+    <div class="title">Meet the Team Behind <span style="color:#4ca1af;">StudyXpert</span></div>
+
+    <div class="team-row">
+      <div class="team-member">
+        <img src="./profiles/risith.jpg" alt="Risith" class="profile-img" />
+        <div class="member-name">Risith</div>
+        <div class="member-role">Full Stack Developer</div>
+        <div class="member-bio">Specializes in backend services and frontend integrations.</div>
+      </div>
+
+      <div class="team-member">
+        <img src="./profiles/harsitha.jpg" alt="Harsitha" class="profile-img" />
+        <div class="member-name">Harsitha</div>
+        <div class="member-role">UI/UX Developer</div>
+        <div class="member-bio">Crafted beautiful interfaces and seamless user experiences.</div>
+      </div>
+
+      <div class="team-member">
+        <img src="./profiles/rohit.jpg" alt="Rohit" class="profile-img" />
+        <div class="member-name">Rohit</div>
+        <div class="member-role">Frontend Developer</div>
+        <div class="member-bio">Focused on responsive layouts and component architecture.</div>
+      </div>
+
+      <div class="team-member">
+        <img src="./profiles/gopal.jpg" alt="Gopal" class="profile-img" />
+        <div class="member-name">Gopal</div>
+        <div class="member-role">Backend Engineer</div>
+        <div class="member-bio">Developed APIs and ensured system logic performance.</div>
+      </div>
+
+      <div class="team-member">
+        <img src="./profiles/rdv.jpg" alt="RDV" class="profile-img" />
+        <div class="member-name">RDV</div>
+        <div class="member-role">DevOps & Integrator</div>
+        <div class="member-bio">Managed CI/CD and integration across the platform.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="./components/navbar.js"></script>
+  <script>
+    const bg = document.getElementById('bg');
+    for(let i=0; i<30; i++){
+      const b = document.createElement('div');
+      const size = Math.random()*80 + 20;
+      b.className = 'bubble';
+      b.style.width = size+'px';
+      b.style.height = size+'px';
+      b.style.left = Math.random()*100 + 'vw';
+      b.style.animationDuration = (10 + Math.random()*20) + 's';
+      b.style.animationDelay = -(Math.random()*20) + 's';
+      bg.appendChild(b);
+    }
+  </script>
+</body>
+</html>

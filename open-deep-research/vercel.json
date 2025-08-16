@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    { "source": "/about", "destination": "/static-pages/about.html" },
+    { "source": "/login", "destination": "/static-pages/login.html" },
+    { "source": "/competitions", "destination": "/static-pages/competitions.html" },
+    { "source": "/internship", "destination": "/static-pages/internship.html" },
+    { "source": "/jobs", "destination": "/static-pages/jobs.html" },
+    { "source": "/practice", "destination": "/static-pages/practice.html" },
+    { "source": "/leadership", "destination": "/static-pages/leadership.html" },
+    { "source": "/posts", "destination": "/static-pages/posts.html" },
+    { "source": "/user_storage", "destination": "/static-pages/user_storage.html" },
+    { "source": "/admin_store", "destination": "/static-pages/admin_store.html" }
+  ]
+}
