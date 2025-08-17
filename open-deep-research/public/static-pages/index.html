@@ -2,11 +2,38 @@
 <html lang="en">
 <head>
   <title>StudyExpert Dashboard</title>
-  <link rel="stylesheet" href="../../styles/styles.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
   <style>
+    /* Navbar link hover effects */
+    .nav-link {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: #7c3aed;
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+    
+    .nav-link:hover {
+        color: #7c3aed !important;
+        background-color: rgba(124, 58, 237, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .nav-link:hover::after {
+        width: 80%;
+    }
+
     .carousel { scroll-snap-type: x mandatory; }
     .carousel-item { scroll-snap-align: start; flex: 0 0 auto; width: 280px; }
     #bg-slider { transition: opacity 1s ease-in-out; }
@@ -50,20 +77,730 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       color: #0c4a6e;
     }
+    /* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
 
-    /* Updated about section background to full white */
-    section.max-w-4xl.mx-auto.px-4.py-8.text-center.text-white-700 {
-      background-color: #ffffff !important;
-      color: #000000 !important;
-      padding: 2rem 1rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+.footer {
+  background-color: #0967c5;
+  color: #ffffff;
+  padding: 2rem 1rem 1rem;
+  font-family: 'Arial', sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 100%;
+  margin: 0;
+  gap: 2rem;
+}
+
+.footer-container div {
+  flex: 1 1 250px;
+}
+
+.footer-about h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-about p,
+.footer-contact p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #00bfff;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 1rem;
+}
+
+/* Footer styles added as per user feedback */
+.footer {
+  background-color: #003366;
+  color: #ffffff;
+  padding: 2rem 1rem 1rem;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 2rem;
+  border-radius: 8px;
+}
+
+/* Removed duplicate .footer-container rule restricting width */
+
+.footer-container div {
+  flex: 1 1 250px;
+}
+
+.footer-about h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-about p,
+.footer-contact p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #00bfff;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 1rem;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1100px;
+  margin: auto;
+  gap: 2rem;
+}
+
+.footer-container div {
+  flex: 1 1 250px;
+}
+
+.footer-about h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-about p,
+.footer-contact p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #00bfff;
+  text-decoration: underline;
+}
+/* Navbar styling */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #003366; /* Primary color */
+  padding: 15px 30px;
+  width: 100%;
+}
+
+.navbar__logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: white;
+}
+
+.navbar__menu {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar__menu li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.navbar__menu li a:hover {
+  background-color: #002244;
+}
+
+.navbar__cta a {
+  background-color: #17086e;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  color: white;
+  text-decoration: none;
+}
+
+.navbar__cta a:hover {
+  background-color: #1e0d8f;
+}
+
+/* Hamburger toggle (hidden on desktop) */
+.navbar__toggle {
+  display: none;
+}
+
+.navbar__toggle-label {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.navbar__toggle-label span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  display: block;
+  border-radius: 2px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .navbar__toggle {
+    display: block;
+  }
+  .navbar__toggle-label {
+    display: flex;
+  }
+  .navbar__menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #003366;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .navbar__toggle:checked ~ .navbar__menu {
+    max-height: 500px;
+    padding-bottom: 1rem;
+  }
+  .navbar__menu li {
+    text-align: center;
+    margin: 0.5rem 0;
+  }
+  .navbar__cta {
+    margin-top: 0.5rem;
+  }
+}
+/* Logo container */
+/*
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+/* Logo image */
+.logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Makes the logo circular */
+    object-fit: cover; /* Ensures the image fills the circular space */
+    margin-right: 15px;
+}
+/* Brand name styling */
+.brand-name {
+    font-size: 26px;
+    font-weight: bold;
+    color: rgb(10, 23, 113);
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+/* Highlight 'Xpert' */
+.highlight {
+    color: #1e0256; /* Contrast color */
+    font-weight: bold;
+}
+/* Navigation links */
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+.nav-links li {
+    margin-left: 20px;
+    position: relative;
+}
+.nav-links li a {
+    color: rgb(10, 3, 84);
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px 15px;
+    transition: 0.3s ease-in-out;
+}
+/* Hover Effect */
+.nav-links li a:hover {
+    background-color: rgb(247, 244, 244); /* Slight white glow */
+    transform: translateY(-3px); /* Moves the link slightly upwards */
+    border-radius: 5px;
+}
+/*nav bar done*/
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Responsive Container */
+.container {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: auto auto;
+    gap: 1px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 10px auto;
+    gap:15px;
+}
+
+/* Box Styling */
+.box {
+    border: 1px solid #673AB7; /* Stylish border */
+    border-radius: 15px; /* Rounded corners */
+    padding: 5px;
+    text-align: center;
+    background: #d7d6d7; /* Light purple background */
+    transition: 0.2s ease-in-out;
+}
+
+/* Hover Effect */
+.box:hover {
+    background: #9575CD;
+    color: rgb(162, 149, 149);
+    transform: scale(1.01); /* Slight scale-up */
+}
+
+/* Image Styling */
+.box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image fits within the box */
+    border-radius: 1px; /* Rounded corners for images */
+}
+
+/* Top Image Box - Spanning Full Width */
+.image1 {
+    grid-column: span 2;
+    height: 380px;
+}
+
+/* Bottom Image Boxes */
+.image2 {
+    height: 200px;
+    width: 50%;
+}
+.image3 {
+    height: 200px;
+     width: 90%;
+}
+
+/* Welcome overlay box on image1 */
+.welcome-overlay {
+    position:absolute ;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.6); /* Light transparent white */
+    padding: 15px 25px;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 6px rgba(146, 144, 144, 0.1);
+    font-weight: bold;
+    color: #1e0256;
+    font-size: 20px;
+    text-align: center;
+}
+.campus-text {
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #7761db;
+}
+.welcome-message {
+    font-size: 20px;
+    font-weight: 700;
+    color: #010007;
+}
+/*exam pre*/
+.exam-preparation {
+    max-width: 700px;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 15px; /* updated to 15px for consistency */
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    padding: 5px;
+    text-align: center;
+}
+
+.exam-preparation h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.exam-images {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.exam-images img {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+}
+
+.exam-images img:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+/* Navbar styles added from provided snippet */
+/* reset some defaults */
+.navbar,
+.navbar * { box-sizing: border-box; margin: 0; padding: 0; }
+.navbar__menu,
+.navbar__toggle-label { list-style: none; }
+
+/* container */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #003366;
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  position: relative;
+  font-family: sans-serif;
+}
+
+/* logo */
+.navbar__logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* menu */
+.navbar__menu {
+  display: flex;
+  gap: 1rem;
+}
+.navbar__menu li a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 0.8rem;
+  transition: background 0.2s;
+}
+.navbar__menu li a:hover {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+
+/* call-to-action buttons at end */
+.navbar__cta a {
+  background: #17086e;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+}
+.navbar__cta a:hover {
+  background: #1e0d8f;
+}
+
+/* hamburger toggle (hidden on desktop) */
+.navbar__toggle {
+  display: none;
+}
+.navbar__toggle-label {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+.navbar__toggle-label span {
+  width: 25px;
+  height: 3px;
+  background: #fff;
+  display: block;
+  border-radius: 2px;
+}
+
+/* responsive: mobile ≤768px */
+@media (max-width: 768px) {
+  .navbar__toggle {
+    display: block;
+  }
+  .navbar__toggle-label {
+    display: flex;
+  }
+  .navbar__menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #003366;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  /* when checked, expand menu */
+  .navbar__toggle:checked ~ .navbar__menu {
+    max-height: 500px;
+    padding-bottom: 1rem;
+  }
+  .navbar__menu li {
+    text-align: center;
+    margin: 0.5rem 0;
+  }
+  .navbar__cta {
+    margin-top: 0.5rem;
+  }
+}
+/*mini prof end*/
+/* 3. Styles for the section */
+.exam-section {
+  position: relative;
+  background: url('your-background-photo.jpg') center/cover no-repeat;
+  height: 280px;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px; /* updated to 15px for fully round curved corners */
+}
+
+/* Toast message for login first */
+#login-toast-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0,0,0,0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 10000;
+  font-size: 16px;
+}
+
+.exam-section .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.exam-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  color: #fff;
+  background-color: transparent; /* transparent background */
+  justify-content: space-between;
+}
+
+.exam-left, .exam-cta, .exam-animation, .exam-right {
+  flex: 1 1 0;
+  max-width: 200px;
+  background-color: #6c5ce7; /* uniform background color */
+  border-radius: 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.exam-left img, .exam-right img {
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+}
+
+.exam-cta {
+  flex-direction: column;
+  text-align: center;
+}
+
+.exam-cta h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.exam-cta .btn {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 1rem;
+  border-radius: 15px;
+}
+
+.exam-animation {
+  padding: 0;
+  background-color: transparent;
+  max-width: 250px;
+  flex: 0 0 auto;
+}
+
+.exam-cta h2 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.6rem;
+  background-color: #6c5ce7;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #341f97;
+}
+
+@media (max-width: 600px) {
+  .exam-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
+    <!-- Modern Navbar -->
+    <nav style="background-color: black; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); border-radius: 15px; margin: 10px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+            <!-- Logo Section -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="/logo.png" alt="StudyXpert Logo" style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #7c3aed; box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);">
+                <span style="font-size: 22px; font-weight: bold; color: white;">Study<span style="color: #7c3aed">X</span>pert</span>
+            </div>
+            
+            <!-- Navigation Links -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="/static-pages/index.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Home
+                </a>
+                <a href="/static-pages/about.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    About
+                </a>
+                <a href="/static-pages/storage.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Storage
+                </a>
+                <a href="/static-pages/posts.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Posts
+                </a>
+                <a href="/static-pages/internships.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Internships
+                </a>
+                <a href="/static-pages/jobs.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Jobs
+                </a>
+                <a href="/static-pages/competitions.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Competitions
+                </a>
+                <a href="/static-pages/leadership.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Leadership
+                </a>
+                <a href="#" onclick="handleResearchClick(event)" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Research
+                </a>
+                <a href="/static-pages/login.html" style="display: inline-block; background-color: #7c3aed; color: white; padding: 6px 16px; margin-left: 8px; border-radius: 20px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#6d28d9'" onmouseout="this.style.backgroundColor='#7c3aed'">
+                    Login
+                </a>
+                   
+                
+            </div>
+        </div>
+    </nav>
   <div class="background-particles"></div>
-  <script src="/open-deep-research/public/components/navbar-injector.js"></script>
 
   <!-- Hero Section -->
   <section id="hero-slider" class="relative h-[80vh] flex items-center justify-center text-white overflow-hidden">
@@ -259,7 +996,7 @@
       <img src="https://cdn.dribbble.com/users/1162077/screenshots/5403918/focus-animation.gif" alt="Exam" class="w-40 md:w-48" />
       <div class="my-4 md:my-0" style="min-width: 300px;">
         <h2 class="text-2xl font-bold mb-2">Want to Use free AI models?</h2>
-        <a href="http://localhost:3000" class="inline-block px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Go to My Research</a>
+        <a href="#" onclick="handleResearchClick(event)" class="inline-block px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Go to My Research</a>
       </div>
       <dotlottie-player
         src="https://lottie.host/629bf175-83b3-4989-bddf-a487dda58416/4S0p1GNGos.lottie"
@@ -302,6 +1039,81 @@
 
   <!-- Scripts -->
   <script>
+    // Authentication check function
+    function isLoggedIn() {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      return !!(token && user);
+    }
+
+    // Show login message
+    function showLoginMessage() {
+      const toast = document.createElement('div');
+      toast.id = 'login-toast-message';
+      toast.textContent = 'Please login first to use this feature';
+      toast.style.position = 'fixed';
+      toast.style.top = '20px';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+      toast.style.backgroundColor = 'rgba(0,0,0,0.8)';
+      toast.style.color = 'white';
+      toast.style.padding = '10px 20px';
+      toast.style.borderRadius = '5px';
+      toast.style.zIndex = '1000';
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    // Handle any interactive feature click
+    function handleFeatureClick(event) {
+      if (!isLoggedIn()) {
+        event.preventDefault();
+        showLoginMessage();
+        window.location.href = '/static-pages/login.html';
+        return false;
+      }
+      return true;
+    }
+
+    // Add click handlers to all interactive elements
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add handlers to all buttons
+      document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', handleFeatureClick);
+      });
+
+      // Add handlers to interactive links (excluding navigation)
+      document.querySelectorAll('a:not(.nav-link)').forEach(link => {
+        link.addEventListener('click', handleFeatureClick);
+      });
+
+      // Add handlers to forms
+      document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', handleFeatureClick);
+      });
+
+      // Add handlers to input fields
+      document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', handleFeatureClick);
+      });
+    });
+
+    // Add hover effects to nav links
+    document.querySelectorAll('.navbar-links a').forEach(link => {
+      link.addEventListener('mouseover', () => {
+        link.style.backgroundColor = '#333';
+        link.style.transform = 'translateY(-2px)';
+      });
+      
+      link.addEventListener('mouseout', () => {
+        link.style.backgroundColor = 'transparent';
+        link.style.transform = 'translateY(0)';
+      });
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
       const token = localStorage.getItem('token');
       const user = JSON.parse(localStorage.getItem('loggedInUser')) || {};

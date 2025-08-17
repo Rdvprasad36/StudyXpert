@@ -38,15 +38,15 @@ export default function Navbar() {
   }
 
   const navItems = [
-    { name: 'Home', href: '/static-pages/index.html', icon: '🏠', external: false },
-    { name: 'About', href: '/static-pages/about.html', icon: 'ℹ️', external: false },
-    { name: 'Storage', href: '/static-pages/storage.html', icon: '📁', external: false },
-    { name: 'Posts', href: '/static-pages/posts.html', icon: '📝', external: false },
-    { name: 'Internships', href: '/static-pages/internships.html', icon: '💼', external: false },
-    { name: 'Jobs', href: '/static-pages/jobs.html', icon: '💼', external: false },
-    { name: 'Competitions', href: '/static-pages/competitions.html', icon: '🏆', external: false },
-    { name: 'Leadership', href: '/static-pages/leadership.html', icon: '👑', external: false },
-    { name: 'Research', href: '/flow', icon: '🔬', external: false },
+    { name: 'Home', href: '/static-pages/index.html',external: false },
+    { name: 'About', href: '/static-pages/about.html', external: false },
+    { name: 'Storage', href: '/static-pages/storage.html',external: false },
+    { name: 'Posts', href: '/static-pages/posts.html',external: false },
+    { name: 'Internships', href: '/static-pages/internships.html', external: false },
+    { name: 'Jobs', href: '/static-pages/jobs.html', external: false },
+    { name: 'Competitions', href: '/static-pages/competitions.html',  external: false },
+    { name: 'Leadership', href: '/static-pages/leadership.html', external: false },
+    { name: 'Research', href: 'http://localhost:3000', icon: '🔬', external: false },
   ]
 
   return (
@@ -99,7 +99,7 @@ export default function Navbar() {
                   <div className='absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-50'>
                     <div className='py-1'>
                       <a
-                        href='/frontend/user_storage.html'
+                        href='/static-pages/storage.html'
                         className='block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                       >
                         Profile
@@ -116,7 +116,7 @@ export default function Navbar() {
               </div>
             ) : (
               <a
-                href='/frontend/login.html'
+                href='/static-pages/login.html'
                 className='px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 transition-colors'
               >
                 Login
