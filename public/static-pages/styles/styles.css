@@ -1,0 +1,256 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+.footer {
+  background-color: #0967c5;
+  color: #ffffff;
+  padding: 2rem 1rem 1rem;
+  font-family: 'Arial', sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 100%;
+  margin: 0;
+  gap: 2rem;
+}
+
+.footer-container div {
+  flex: 1 1 250px;
+}
+
+.footer-about h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-about p,
+.footer-contact p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #00bfff;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 1rem;
+}
+
+/* Footer styles added as per user feedback */
+.footer {
+  background-color: #003366;
+  color: #ffffff;
+  padding: 2rem 1rem 1rem;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 2rem;
+  border-radius: 8px;
+}
+
+.footer-container div {
+  flex: 1 1 250px;
+}
+
+.footer-about h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-about p,
+.footer-contact p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #00bfff;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 1rem;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1100px;
+  margin: auto;
+  gap: 2rem;
+}
+
+/* Container Styling */
+.container {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: auto auto;
+    gap: 15px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 10px auto;
+}
+
+/* Box Styling */
+.box {
+    border: 1px solid #673AB7;
+    border-radius: 15px;
+    padding: 5px;
+    text-align: center;
+    background: #d7d6d7;
+    transition: 0.2s ease-in-out;
+}
+
+.box:hover {
+    background: #9575CD;
+    color: rgb(162, 149, 149);
+    transform: scale(1.01);
+}
+
+/* Image Styling */
+.box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1px;
+}
+
+/* Welcome Section */
+.welcome-overlay {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.6);
+    padding: 15px 25px;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 6px rgba(146, 144, 144, 0.1);
+    font-weight: bold;
+    color: #1e0256;
+    font-size: 20px;
+    text-align: center;
+}
+
+/* Form Styling */
+.login-form {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-group input:focus {
+    border-color: #003366;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0,51,102,0.2);
+}
+
+.btn-primary {
+    background-color: #003366;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #002244;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .login-form {
+        margin: 20px;
+    }
+}

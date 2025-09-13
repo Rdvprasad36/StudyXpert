@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - StudyXpert</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #7c3aed;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            border: 2px solid #fff;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            min-width: 120px;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu a:hover {
+            background: #f0f0f0;
+        }
+    /* --- Hero Section with Particles --- */
+    .hero {
+      position: relative;
+      margin-top: 60px;
+      height: 400px;
+      background: url('https://vignaniit.edu.in/assets/images/slider/slide1.jpg') center/cover no-repeat;
+      display: flex;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.6);
+      pointer-events: none;
+    }
+    .hero h2 {
+      position: relative; font-size: 2.5rem;
+      padding: 20px; border-radius: 10px;
+      background: rgba(152, 169, 207, 0.85);
+      z-index: 2;
+    }
+    .particle { position: absolute; border-radius: 50%; background: #74b9ff; opacity: 0.2; animation: move 20s linear infinite; }
+    @keyframes move {
+      0% { transform: translate3d(var(--x0), var(--y0), 0) scale(0.5); }
+      100% { transform: translate3d(var(--x1), var(--y1), 0) scale(0.5); }
+    }
+
+    /* --- Content Section --- */
+    .content {
+      padding: 60px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .content h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+    .content p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .video-container {
+      margin-top: 30px;
+      position: relative;
+      padding-bottom: 56.25%; height: 0;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    .video-container iframe {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+
+    /* --- Footer --- */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(223, 193, 193, 0.7);
+      margin-top: 40px;
+      font-size: 0.9rem;
+    }
+    @keyframes fadeBG {
+      0%,100% {background-position:0% 50%;}
+      50%      {background-position:100% 50%;}
+    }
+  </style>
+</head>
+<body>
+    <!-- Modern Navbar -->
+    <nav style="background-color: black; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); border-radius: 15px; margin: 10px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+            <!-- Logo Section -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="/logo.png" alt="StudyXpert Logo" style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #7c3aed; box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);">
+                <span style="font-size: 22px; font-weight: bold; color: white;">Study<span style="color: #7c3aed">X</span>pert</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="/static-pages/index.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Home
+                </a>
+                <a href="/static-pages/about.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    About
+                </a>
+                <a href="/static-pages/storage.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Storage
+                </a>
+                <a href="/static-pages/posts.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Posts
+                </a>
+                <a href="/static-pages/internships.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Internships
+                </a>
+                <a href="/static-pages/jobs.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Jobs
+                </a>
+                <a href="/static-pages/competitions.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Competitions
+                </a>
+                <a href="/static-pages/leadership.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Leadership
+                </a>
+                <a href="http://localhost:3000" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Research
+                </a>
+                <div id="auth-section">
+                    <a href="/static-pages/login.html" class="login-btn" id="login-btn" style="display: inline-block; background-color: #7c3aed; color: white; padding: 6px 16px; margin-left: 8px; border-radius: 20px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#6d28d9'" onmouseout="this.style.backgroundColor='#7c3aed'">
+                        Login
+                    </a>
+                    <div class="profile-container" id="profile-container" style="display:none;">
+                        <div class="profile-pic" id="profile-pic"></div>
+                        <div class="dropdown-menu" id="dropdown-menu" style="display:none;">
+                            <a href="/static-pages/profile.html" id="profile-link">Profile</a>
+                            <a href="#" id="logout-link">Logout</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </nav>
+
+  <section class="hero">
+    <h2>Vignan's Institute of Information Technology, Duvvada</h2>
+  </section>
+
+  <section class="content">
+    <h3>About VIIT</h3>
+    <p>Established in 2002, VIIT is an autonomous engineering college in Duvvada, Visakhapatnam, accredited by NBA & NAAC–A+, and ranked in the NIRF 201–300 band :contentReference[oaicite:7]{index=7}.</p>
+    <p>Spread across a serene 17‑acre campus, VIIT offers undergraduate and postgraduate programs — B.Tech (11 branches), M.Tech, MCA, and MBA. It is affiliated with JNTU‑GV and approved by AICTE & UGC :contentReference[oaicite:8]{index=8}.</p>
+    <p>Powered by experienced faculty, modern infrastructure, and a vibrant student community, VIIT conducts cultural fests, tech symposia, and strong placement drives. Over 1,100+ undergrads and 60+ postgrads were placed recently, with a median salary around ₹4.6 LPA :contentReference[oaicite:9]{index=9}.</p>
+
+    <h3>Campus Tour</h3>
+    <div class="video-container">
+      <iframe src="https://www.bing.com/videos/riverview/relatedvideo?&q=viit+college%2c+duvvada+ads&&mid=E3E09FA2430FC2B08E47E3E09FA2430FC2B08E47&&FORM=VRDGAR" title="VIIT Campus Tour" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <script>
+    const { createClient } = window.supabase;
+    const supabaseUrl = 'https://jgqltmpfueoxjeoauxcs.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpncWx0bXBmdWVveGplb2F1eGNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5ODI5NzIsImV4cCI6MjA2NzU1ODk3Mn0.Fu7C86_QuZbhyZ1b7tMXZ5MaVbIMmM4oHflFgpJuP90';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Profile functionality
+    function getInitials(name) {
+      if (!name) return '';
+      const names = name.trim().split(' ');
+      if (names.length === 1) return names[0].charAt(0).toUpperCase();
+      return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+    }
+
+    async function checkLoginStatus() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Get profile data to display initials
+        let profileData = null;
+
+        // Try student table first
+        const { data: studentData } = await supabase
+          .from('student_profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .single();
+
+        if (studentData) {
+          profileData = studentData;
+        } else {
+          // Try admin table
+          const { data: adminData } = await supabase
+            .from('admin_profiles')
+            .select('full_name')
+            .eq('id', user.id)
+            .single();
+
+          if (adminData) {
+            profileData = adminData;
+          }
+        }
+
+        if (profileData) {
+          document.getElementById('login-btn').style.display = 'none';
+          document.getElementById('profile-container').style.display = 'inline-block';
+          document.getElementById('profile-pic').textContent = getInitials(profileData.full_name);
+        }
+      } else {
+        document.getElementById('login-btn').style.display = 'inline-block';
+        document.getElementById('profile-container').style.display = 'none';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await checkLoginStatus();
+
+      const profilePic = document.getElementById('profile-pic');
+      const dropdownMenu = document.getElementById('dropdown-menu');
+      const profileLink = document.getElementById('profile-link');
+      const logoutLink = document.getElementById('logout-link');
+
+      if (profilePic) {
+        profilePic.addEventListener('click', () => {
+          dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+      }
+
+      if (profileLink) {
+        profileLink.addEventListener('click', () => {
+          dropdownMenu.style.display = 'none';
+        });
+      }
+
+      if (logoutLink) {
+        logoutLink.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const { error } = await supabase.auth.signOut();
+          if (error) {
+            console.error('Error logging out:', error);
+          }
+          localStorage.removeItem('loggedInUser');
+          dropdownMenu.style.display = 'none';
+          window.location.href = '/static-pages/login.html';
+        });
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!profilePic.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          dropdownMenu.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

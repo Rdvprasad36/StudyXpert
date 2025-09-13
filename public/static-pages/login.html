@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login-StudyXpert</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+  <style>
+  body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #545454;
+      color: #ddd;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .container-wrapper {
+      width: 100%;
+      max-width: 900px;
+      padding: 40px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      overflow-y: auto;
+      max-height: calc(100vh - 60px);
+      margin-top: 60px; /* space for navbar */
+    }
+
+    .animation-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      max-height: 90vh;
+      overflow: auto;
+      position: relative;
+    }
+
+    .card {
+      flex: 1;
+      max-width: 400px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      padding: 30px 40px;
+      box-sizing: border-box;
+      text-align: center;
+      overflow-y: auto;
+      max-height: 90vh;
+      position: relative;
+    }
+
+    .card h1 {
+      margin-bottom: 10px;
+      font-weight: 900;
+      font-size: 2rem;
+      color: #222;
+    }
+
+    .card p.subtitle {
+      margin-bottom: 10px;
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .role-toggle {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .role-toggle button {
+      flex: 1;
+      padding: 10px 0;
+      border: none;
+      background: #f9f9f9;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #555;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .role-toggle button.active {
+      background: #667eea;
+      color: white;
+      font-weight: 700;
+    }
+
+    .role-toggle button svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    form {
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="date"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 20px;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #667eea;
+      outline: none;
+    }
+
+    button.submit-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #667eea;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button.submit-btn:hover {
+      background-color: #5563c1;
+    }
+
+    .toggle-link {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #667eea;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle-link:hover {
+      text-decoration: underline;
+    }
+
+    .forgot-password {
+      margin-top: 10px;
+      text-align: right;
+      font-size: 0.9rem;
+      color: #667eea;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .forgot-password:hover {
+      text-decoration: underline;
+    }
+
+    .profile-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #fff;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+      min-width: 120px;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .dropdown-menu a:hover {
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <!-- Modern Navbar -->
+  <nav style="background-color: black; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); border-radius: 15px; margin: 10px 20px;">
+      <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+          <!-- Logo Section -->
+          <div style="display: flex; align-items: center; gap: 12px;">
+              <img src="/logo.png" alt="StudyXpert Logo" style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #7c3aed; box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);">
+              <span style="font-size: 22px; font-weight: bold; color: white;">Study<span style="color: #7c3aed">X</span>pert</span>
+          </div>
+
+          <!-- Navigation Links -->
+          <div style="display: flex; align-items: center; gap: 8px;">
+              <a href="/static-pages/index.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                  Home
+              </a>
+              <a href="/static-pages/about.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                  About
+              </a>
+              <a href="/static-pages/storage.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                  Storage
+              </a>
+              <a href="/static-pages/posts.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                  Posts
+              </a>
+              <a href="/static-pages/internships.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                  Internships
+              </a>
+              <a href="/static-pages/jobs.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                  Jobs
+              </a>
+              <a href="/static-pages/competitions.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                  Competitions
+              </a>
+              <a href="/static-pages/leadership.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                  Leadership
+              </a>
+              <a href="http://localhost:3000" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                  Research
+              </a>
+              <div id="auth-section">
+                  <a href="/static-pages/login.html" class="login-btn" id="login-btn" style="display: inline-block; background-color: #7c3aed; color: white; padding: 6px 16px; margin-left: 8px; border-radius: 20px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#6d28d9'" onmouseout="this.style.backgroundColor='#7c3aed'">
+                      Login
+                  </a>
+                  <div class="profile-container" id="profile-container" style="display:none;">
+                      <div class="profile-pic" id="profile-pic"></div>
+                      <div class="dropdown-menu" id="dropdown-menu" style="display:none;">
+                          <a href="/static-pages/profile.html" id="profile-link">Profile</a>
+                          <a href="#" id="logout-link">Logout</a>
+                      </div>
+                  </div>
+              </div>
+
+
+          </div>
+      </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto px-4 py-16">
+    <div class="container-wrapper" role="main" aria-label="Login and registration form">
+    <div class="animation-container">
+      <dotlottie-player src="https://lottie.host/684d9b34-d4c0-4529-aac1-82e10be430b4/XnanIcCACM.lottie" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></dotlottie-player>
+    </div>
+
+      <div class="card">
+        <h1>StudyXpert</h1>
+        <p class="subtitle">Sign in to your account</p>
+
+        <div style="margin-bottom: 15px; text-align: center;">
+          <a href="signup-details.html" class="submit-btn" style="width: auto; padding: 8px 16px; font-size: 1rem;">
+            View Signup Details
+          </a>
+        </div>
+
+        <div class="role-toggle" role="tablist" aria-label="Select user role">
+          <button id="studentTab" role="tab" aria-selected="true" aria-controls="studentPanel" tabindex="0" class="active">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Student
+          </button>
+          <button id="adminTab" role="tab" aria-selected="false" aria-controls="adminPanel" tabindex="-1">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7v7c0 5 4 8 10 8s10-3 10-8V7l-10-5z"/></svg>
+            Admin
+          </button>
+        </div>
+
+        <form id="loginForm" novalidate>
+          <label for="emailOrRoll">Email</label>
+          <input type="email" id="emailOrRoll" name="emailOrRoll" placeholder="Enter your email" required autocomplete="username" />
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password" />
+          <button type="submit" class="submit-btn" id="loginButton">Sign In as Student</button>
+          <div class="forgot-password" id="forgotPassword">Forgot Password?</div>
+          <div class="toggle-link" id="showRegister">Don't have an account? Sign up</div>
+        </form>
+
+        <form id="registerForm" novalidate style="display:none;">
+          <label for="regName">Full Name</label>
+          <input type="text" id="regName" name="regName" placeholder="Enter your full name" required />
+          <label for="regUsername">Username</label>
+          <input type="text" id="regUsername" name="regUsername" placeholder="Choose a username" required />
+          <label for="regEmail">Email</label>
+          <input type="email" id="regEmail" name="regEmail" placeholder="Enter your email" required />
+          <label for="regIdNumber">ID Number</label>
+          <input type="text" id="regIdNumber" name="regIdNumber" placeholder="Enter your ID number" required />
+          <label for="regDob">Date of Birth</label>
+          <input type="date" id="regDob" name="regDob" placeholder="Enter your date of birth" required />
+          <label for="regPassword">Password</label>
+          <input type="password" id="regPassword" name="regPassword" placeholder="Choose a password" required />
+          <label for="regConfirmPassword">Confirm Password</label>
+          <input type="password" id="regConfirmPassword" name="regConfirmPassword" placeholder="Confirm your password" required />
+          <button type="submit" class="submit-btn" id="registerButton">Sign Up as Student</button>
+          <div class="toggle-link" id="showLogin">Already have an account? Sign in</div>
+        </form>
+      </div>
+  </div>
+
+    <script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    if (!window.supabase) {
+      alert('Supabase library not loaded. Please refresh the page or check your internet connection.');
+      return;
+    }
+    const { createClient } = window.supabase;
+    const supabaseUrl = 'https://jgqltmpfueoxjeoauxcs.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpncWx0bXBmdWVveGplb2F1eGNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5ODI5NzIsImV4cCI6MjA2NzU1ODk3Mn0.Fu7C86_QuZbhyZ1b7tMXZ5MaVbIMmM4oHflFgpJuP90';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const studentTab = document.getElementById('studentTab');
+    const adminTab = document.getElementById('adminTab');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const loginButton = document.getElementById('loginButton');
+    const registerButton = document.getElementById('registerButton');
+    const showRegister = document.getElementById('showRegister');
+    const showLogin = document.getElementById('showLogin');
+    const forgotPassword = document.getElementById('forgotPassword');
+
+    console.log('Elements loaded:', { studentTab, adminTab, loginForm, registerForm, loginButton, registerButton, showRegister, showLogin, forgotPassword });
+
+    let currentRole = 'student';
+    let isLoginMode = true;
+
+    function updateRole(role) {
+      currentRole = role;
+      studentTab.classList.toggle('active', role === 'student');
+      studentTab.setAttribute('aria-selected', role === 'student');
+      studentTab.tabIndex = role === 'student' ? 0 : -1;
+
+      adminTab.classList.toggle('active', role === 'admin');
+      adminTab.setAttribute('aria-selected', role === 'admin');
+      adminTab.tabIndex = role === 'admin' ? 0 : -1;
+
+      updateForm();
+    }
+
+    function updateForm() {
+      if (isLoginMode) {
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
+        loginButton.textContent = currentRole === 'student' ? 'Sign In as Student' : 'Sign In as Admin';
+      } else {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        registerButton.textContent = currentRole === 'student' ? 'Sign Up as Student' : 'Sign Up as Admin';
+      }
+    }
+
+    studentTab.addEventListener('click', () => updateRole('student'));
+    adminTab.addEventListener('click', () => updateRole('admin'));
+
+    showRegister.addEventListener('click', () => {
+      console.log('Show register clicked');
+      isLoginMode = false;
+      updateForm();
+    });
+
+    showLogin.addEventListener('click', () => {
+      console.log('Show login clicked');
+      isLoginMode = true;
+      updateForm();
+    });
+
+    forgotPassword.addEventListener('click', async () => {
+      const email = prompt('Please enter your email for password recovery:');
+      if (!email) {
+        alert('Email is required for password recovery.');
+        return;
+      }
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) {
+        alert('Error sending password reset email: ' + error.message);
+      } else {
+        alert('Password reset email sent. Please check your inbox.');
+      }
+    });
+
+    loginForm.addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const emailOrRoll = document.getElementById('emailOrRoll').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!emailOrRoll || !password) {
+        alert('Please enter both email and password.');
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: emailOrRoll,
+          password: password
+        });
+
+        if (error || !data.session) {
+          alert('Login failed: ' + (error ? error.message : 'No session returned'));
+          return;
+        }
+
+        // Fetch profile data
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('email', emailOrRoll)
+          .single();
+
+        if (profileError) {
+          alert('Error fetching profile: ' + profileError.message);
+          return;
+        }
+
+        alert(`Login successful! Welcome, ${profileData.full_name}`);
+        localStorage.setItem('loggedInUser', JSON.stringify(profileData));
+        loginForm.reset();
+        window.location.href = 'index.html';
+      } catch (err) {
+        alert('Login failed: ' + err.message);
+      }
+    });
+
+    registerForm.addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const name = document.getElementById('regName').value.trim();
+      const username = document.getElementById('regUsername').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const idNumber = document.getElementById('regIdNumber').value.trim();
+      const dob = document.getElementById('regDob').value.trim();
+      const password = document.getElementById('regPassword').value.trim();
+      const confirmPassword = document.getElementById('regConfirmPassword').value.trim();
+
+      if (!name || !username || !email || !idNumber || !dob || !password || !confirmPassword) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return;
+      }
+
+      try {
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: email,
+          password: password
+        });
+
+        if (signUpError || !signUpData.user) {
+          alert('Signup failed: ' + (signUpError ? signUpError.message : 'User creation failed'));
+          return;
+        }
+
+        // Insert profile data into 'profiles' table
+        const { error: profileError } = await supabase.from('profiles').insert({
+          id: signUpData.user.id,
+          email: email,
+          username: username,
+          full_name: name,
+          student_id: idNumber,
+          department: 'General',
+          year: 1,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        });
+
+        if (profileError) {
+          alert('Signup failed: ' + profileError.message);
+          return;
+        }
+
+        alert('Registration successful! You can now log in.');
+        registerForm.reset();
+        isLoginMode = true;
+        updateForm();
+      } catch (err) {
+        alert('Signup failed: ' + err.message);
+      }
+    });
+
+    // Profile functionality
+    function getInitials(name) {
+      if (!name) return '';
+      const names = name.trim().split(' ');
+      if (names.length === 1) return names[0].charAt(0).toUpperCase();
+      return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+    }
+
+    async function checkLoginStatus() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const user = session.user;
+        document.getElementById('login-btn').style.display = 'none';
+        document.getElementById('profile-container').style.display = 'inline-block';
+        document.getElementById('profile-pic').textContent = getInitials(user.user_metadata?.full_name || user.email);
+      } else {
+        document.getElementById('login-btn').style.display = 'inline-block';
+        document.getElementById('profile-container').style.display = 'none';
+      }
+    }
+
+    document.getElementById('profile-pic').addEventListener('click', () => {
+      const dropdown = document.getElementById('dropdown-menu');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.getElementById('profile-link').addEventListener('click', () => {
+      document.getElementById('dropdown-menu').style.display = 'none';
+    });
+
+    document.getElementById('logout-link').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await supabase.auth.signOut();
+      document.getElementById('dropdown-menu').style.display = 'none';
+      window.location.href = '/static-pages/login.html';
+    });
+
+    // Initialize form
+    updateRole('student');
+    updateForm();
+    await checkLoginStatus();
+  });
+</script>
+</body>
+</html>

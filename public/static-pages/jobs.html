@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobs - StudyXpert</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles/styles.css">
+    <style>
+            body {
+      background-image: url('https://tse2.mm.bing.net/th/id/OIP.1uiFDtTCVdKVZCB2ToAScQHaE8?rs=1&pid=ImgDetMain&o=7&rm=3');
+      background-size: cover;
+      background-repeat: repeat;
+    }
+    .apply-popup {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.7) url('https://img.freepik.com/free-vector/job-application-concept-illustration_114360-789.jpg') no-repeat center;
+      background-size: contain;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      z-index: 50;
+    }
+        .profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #7c3aed;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            border: 2px solid #fff;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            min-width: 120px;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu a:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Navbar -->
+    <nav style="background-color: black; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); border-radius: 15px; margin: 10px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+            <!-- Logo Section -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="/logo.png" alt="StudyXpert Logo" style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #7c3aed; box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);">
+                <span style="font-size: 22px; font-weight: bold; color: white;">Study<span style="color: #7c3aed">X</span>pert</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="/static-pages/index.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Home
+                </a>
+                <a href="/static-pages/about.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    About
+                </a>
+                <a href="/static-pages/storage.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Storage
+                </a>
+                <a href="/static-pages/posts.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Posts
+                </a>
+                <a href="/static-pages/internships.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Internships
+                </a>
+                <a href="/static-pages/jobs.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Jobs
+                </a>
+                <a href="/static-pages/competitions.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Competitions
+                </a>
+                <a href="/static-pages/leadership.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Leadership
+                </a>
+                <a href="http://localhost:3000" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Research
+                </a>
+                <div id="auth-section">
+                    <a href="/static-pages/login.html" class="login-btn" id="login-btn" style="display: inline-block; background-color: #7c3aed; color: white; padding: 6px 16px; margin-left: 8px; border-radius: 20px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#6d28d9'" onmouseout="this.style.backgroundColor='#7c3aed'">
+                        Login
+                    </a>
+                    <div class="profile-container" id="profile-container" style="display:none;">
+                        <div class="profile-pic" id="profile-pic"></div>
+                        <div class="dropdown-menu" id="dropdown-menu" style="display:none;">
+                            <a href="/static-pages/profile.html" id="profile-link">Profile</a>
+                            <a href="#" id="logout-link">Logout</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </nav>
+
+ <!-- Hero -->
+  <section class="flex flex-col-reverse md:flex-row items-center justify-between px-8 py-16 bg-gray-100 bg-opacity-90">
+    <div class="md:w-1/2 text-center md:text-left">
+      <h1 class="text-4xl font-bold mb-4"><span class="text-blue-800">Unlock</span> Ambition</h1>
+      <p class="text-gray-600 mb-6">Find and apply to your dream jobs with ease.</p>
+      <div class="flex justify-center md:justify-start gap-4">
+        <button onclick="openFindJobs()" class="bg-blue-900 text-white px-6 py-2 rounded-lg">Find Jobs</button>
+        <button onclick="showPostForm()" class="border border-blue-800 text-blue-800 px-6 py-2 rounded-lg">Post Jobs</button>
+      </div>
+    </div>
+    <div class="md:w-1/2">
+      <img src="https://tse2.mm.bing.net/th/id/OIP.1uiFDtTCVdKVZCB2ToAScQHaE8?rs=1&pid=ImgDetMain&o=7&rm=3" class="w-full max-w-md mx-auto">
+    </div>
+  </section>
+
+  <!-- Job Categories -->
+  <section class="px-8 py-6 bg-white bg-opacity-90">
+    <h2 class="text-xl font-semibold mb-4">Jobs Category</h2>
+    <div class="flex flex-wrap gap-4">
+      <span class="bg-gray-100 px-6 py-3 rounded-full cursor-pointer" onclick="filterByCategory('')">All Jobs</span>
+      <span class="bg-gray-100 px-6 py-3 rounded-full cursor-pointer" onclick="filterByCategory('Software Engineer')">Software Engineer</span>
+      <span class="bg-gray-100 px-6 py-3 rounded-full cursor-pointer" onclick="filterByCategory('Data Analyst')">Data Analyst</span>
+      <span class="bg-gray-100 px-6 py-3 rounded-full cursor-pointer" onclick="filterByCategory('Frontend Developer')"> Frontend Developer</span>
+      <span class="bg-gray-100 px-6 py-3 rounded-full cursor-pointer" onclick="filterByCategory('Full Stack Developer')"> Full Stack Developer</span>
+      <span class="bg-gray-100 px-6 py-3 rounded-full cursor-pointer" onclick="filterByCategory('Web Designer')"> Web Designer</span>
+      <span class="bg-gray-100 px-6 py-3 rounded-full cursor-pointer" onclick="filterByCategory('Data Scientist')"> Data Scientist</span>
+      <span class="bg-gray-100 px-6 py-3 rounded-full cursor-pointer" onclick="filterByCategory('Marketing')"> Marketing</span>
+      <span class="bg-gray-100 px-6 py-3 rounded-full cursor-pointer" onclick="filterByCategory('Finance')"> Finance</span>
+    </div>
+  </section>
+
+  <!-- Post Job Form -->
+  <section id="postSection" class="hidden px-8 py-12 bg-white bg-opacity-90">
+    <div class="max-w-lg mx-auto bg-gray-50 p-8 rounded-lg shadow">
+      <h2 class="text-2xl font-semibold mb-4">Post a Job</h2>
+      <form id="jobForm" class="space-y-4">
+        <input type="text" id="company" placeholder="Company Name" class="w-full px-4 py-2 border rounded" required>
+        <select id="role" class="w-full px-4 py-2 border rounded" required>
+          <option value="">Select Role</option>
+          <option>Software Engineer</option>
+          <option>Data Analyst</option>
+          <option>Frontend Developer</option>
+          <option>Full Stack Developer</option>
+          <option>Web Designer</option>
+          <option>Data Scientist</option>
+          <option>Marketing</option>
+          <option>Finance</option>
+        </select>
+        <input type="text" id="qualification" placeholder="Qualification" class="w-full px-4 py-2 border rounded" required>
+        <input type="text" id="salary" placeholder="Salary (₹)" class="w-full px-4 py-2 border rounded" required>
+        <input type="text" id="experience" placeholder="Experience Required" class="w-full px-4 py-2 border rounded" required>
+        <button class="w-full bg-blue-800 text-white px-4 py-2 rounded" type="submit">Submit Job</button>
+      </form>
+    </div>
+
+    <div class="max-w-4xl mx-auto mt-10">
+      <h3 class="text-xl font-semibold mb-4">Your Posted Jobs</h3>
+      <div id="postedJobs" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </div>
+  </section>
+
+  <!-- Find Jobs -->
+  <section id="findSection" class="hidden px-8 py-12 bg-gray-50 bg-opacity-90">
+    <div id="jobsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+  </section>
+
+  <!-- Apply Popup -->
+  <div id="applyPopup" class="apply-popup hidden">
+    <div class="bg-black bg-opacity-70 px-6 py-4 rounded-lg text-center">
+      <p id="applyText"></p>
+      <button onclick="closeApplyPopup()" class="mt-4 bg-white text-black px-4 py-1 rounded">Close</button>
+    </div>
+  </div>
+
+  <script>
+    let jobs = [];
+    const currentUser = 'user-' + Date.now();
+
+    function showPostForm(){
+      document.getElementById('postSection').style.display = 'block';
+      document.getElementById('findSection').style.display = 'none';
+      renderJobs('posted');
+    }
+
+    function openFindJobs(){
+      document.getElementById('postSection').style.display = 'none';
+      document.getElementById('findSection').style.display = 'block';
+      renderJobs('find');
+    }
+
+    function filterByCategory(role){
+      document.getElementById('postSection').style.display = 'none';
+      document.getElementById('findSection').style.display = 'block';
+      renderJobs('find', role);
+    }
+
+    function renderJobs(view = 'find', filter = '') {
+      const target = view === 'posted' ? document.getElementById('postedJobs') : document.getElementById('jobsList');
+      target.innerHTML = '';
+      const data = filter ? jobs.filter(j => j.role === filter) : jobs;
+
+      const display = view === 'posted' ? data.filter(j => j.user === currentUser) : data;
+
+      if (display.length === 0) {
+        target.innerHTML = `<p class="text-center text-gray-600 col-span-full">${filter ? 'No jobs on this role' : 'No jobs available.'}</p>`;
+        return;
+      }
+
+      display.forEach((job, i) => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-6 rounded-lg shadow';
+        card.innerHTML = `
+          <h3 class="font-bold text-lg">${job.role} @ ${job.company}</h3>
+          <p>Qualification ${job.qualification}</p>
+          <p>package ₹${job.salary}</p>
+          <p>experience ${job.experience}</p>
+          <div class="mt-4 flex gap-2">
+            <button onclick="applyJob(${i})" class="bg-green-600 text-white px-4 py-1 rounded">Apply Job</button>
+            ${view === 'posted' ? `<button onclick="deleteJob(${i})" class="bg-red-600 text-white px-4 py-1 rounded">Delete</button>` : ''}
+          </div>`;
+        target.appendChild(card);
+      });
+    }
+
+    document.getElementById('jobForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const form = e.target;
+      jobs.push({
+        company: form.company.value,
+        role: form.role.value,
+        qualification: form.qualification.value,
+        salary: form.salary.value,
+        experience: form.experience.value,
+        user: currentUser
+      });
+      form.reset();
+      showPostForm();
+    });
+
+    function deleteJob(idx) {
+      if (jobs[idx].user === currentUser) {
+        jobs.splice(idx, 1);
+        showPostForm();
+      }
+    }
+
+    function applyJob(idx) {
+      const name = prompt("Enter your name to apply:");
+      if (name) {
+        document.getElementById('applyText').textContent = `${name}, you applied for ${jobs[idx].role} @ ${jobs[idx].company}`;
+        document.getElementById('applyPopup').classList.remove('hidden');
+      }
+    }
+
+    function closeApplyPopup() {
+      document.getElementById('applyPopup').classList.add('hidden');
+    }
+  </script>
+
+  <script>
+    // Profile functionality
+    function getInitials(name) {
+      if (!name) return '';
+      const names = name.trim().split(' ');
+      if (names.length === 1) return names[0].charAt(0).toUpperCase();
+      return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+    }
+
+    function checkLoginStatus() {
+      const user = localStorage.getItem('loggedInUser');
+      if (user) {
+        const userData = JSON.parse(user);
+        document.getElementById('login-btn').style.display = 'none';
+        document.getElementById('profile-container').style.display = 'inline-block';
+        document.getElementById('profile-pic').textContent = getInitials(userData.name);
+      } else {
+        document.getElementById('login-btn').style.display = 'inline-block';
+        document.getElementById('profile-container').style.display = 'none';
+      }
+    }
+
+    document.getElementById('profile-pic').addEventListener('click', () => {
+      const dropdown = document.getElementById('dropdown-menu');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.getElementById('profile-link').addEventListener('click', () => {
+      document.getElementById('dropdown-menu').style.display = 'none';
+    });
+
+    document.getElementById('logout-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('loggedInUser');
+      document.getElementById('dropdown-menu').style.display = 'none';
+      window.location.href = '/static-pages/login.html';
+    });
+
+    // Call checkLoginStatus on page load
+    checkLoginStatus();
+  </script>
+</body>
+</html>

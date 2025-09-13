@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts - StudyXpert</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <style>
+      
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #eee;
+      overflow-x: hidden;
+    }
+
+    /* Animated bubbles */
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+    .bubble {
+      position: absolute;
+      bottom: -100px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      animation: rise 20s infinite ease-in;
+      mix-blend-mode: screen;
+    }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(0.5); opacity: 0; }
+      50% { opacity: 0.4; }
+      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 38px;
+      margin-bottom: 25px;
+      color: #ffd700;
+    }
+
+    .post-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .post-form input,
+    .post-form textarea {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: #161515;
+      font-size: 16px;
+    }
+    .post-form button {
+      width: fit-content;
+      align-self: flex-end;
+      padding: 10px 20px;
+      background: #ffd700;
+      color: #121212;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .post-form button:hover {
+      background: #e5c100;
+    }
+
+    .post-list {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .post-card {
+      position: relative;
+      background: linear-gradient(135deg, rgba(30,30,30,0.8), rgba(60,60,60,0.8));
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      transition: transform 0.2s ease;
+    }
+    .post-card:hover {
+      transform: translateY(-5px);
+    }
+    .post-title {
+      font-size: 22px;
+      color: #ffd700;
+      margin-bottom: 8px;
+    }
+    .post-body {
+      font-size: 16px;
+      color: #ddd;
+      margin-bottom: 12px;
+    }
+    .post-author {
+      font-size: 14px;
+      color: #bbb;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      display: none;
+    }
+    .post-card.owned .delete-btn {
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      margin: 50px 0 20px;
+      color: #777;
+    }
+  
+        .profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #7c3aed;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            border: 2px solid #fff;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            min-width: 120px;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu a:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Navbar -->
+    <nav style="background-color: black; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); border-radius: 15px; margin: 10px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+            <!-- Logo Section -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="/logo.png" alt="StudyXpert Logo" style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #7c3aed; box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);">
+                <span style="font-size: 22px; font-weight: bold; color: white;">Study<span style="color: #7c3aed">X</span>pert</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="/static-pages/index.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Home
+                </a>
+                <a href="/static-pages/about.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    About
+                </a>
+                <a href="/static-pages/storage.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Storage
+                </a>
+                <a href="/static-pages/posts.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Posts
+                </a>
+                <a href="/static-pages/internships.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Internships
+                </a>
+                <a href="/static-pages/jobs.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Jobs
+                </a>
+                <a href="/static-pages/competitions.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Competitions
+                </a>
+                <a href="/static-pages/leadership.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Leadership
+                </a>
+                <a href="http://localhost:3000" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Research
+                </a>
+                <div id="auth-section">
+                    <a href="/static-pages/login.html" class="login-btn" id="login-btn" style="display: inline-block; background-color: #7c3aed; color: white; padding: 6px 16px; margin-left: 8px; border-radius: 20px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#6d28d9'" onmouseout="this.style.backgroundColor='#7c3aed'">
+                        Login
+                    </a>
+                    <div class="profile-container" id="profile-container" style="display:none;">
+                        <div class="profile-pic" id="profile-pic"></div>
+                        <div class="dropdown-menu" id="dropdown-menu" style="display:none;">
+                            <a href="/static-pages/profile.html" id="profile-link">Profile</a>
+                            <a href="#" id="logout-link">Logout</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </nav>
+
+  
+  <div class="container" style="background-color: #f9f9f9; padding: 20px; border-radius: 15px;">
+    <h1>Community Posts</h1>
+    <div class="post-form">
+      <input type="text" id="postTitle" placeholder="Post title..." />
+      <textarea id="postContent" rows="4" placeholder="What's on your mind?"></textarea>
+      <button onclick="createPost()">Share</button>
+    </div>
+
+    <div class="post-list" id="postList"></div>
+  </div>
+  
+  <script>
+    // Profile functionality
+    function getInitials(name) {
+      if (!name) return '';
+      const names = name.trim().split(' ');
+      if (names.length === 1) return names[0].charAt(0).toUpperCase();
+      return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+    }
+
+    function checkLoginStatus() {
+      const user = localStorage.getItem('loggedInUser');
+      if (user) {
+        const userData = JSON.parse(user);
+        document.getElementById('login-btn').style.display = 'none';
+        document.getElementById('profile-container').style.display = 'inline-block';
+        document.getElementById('profile-pic').textContent = getInitials(userData.name);
+      } else {
+        document.getElementById('login-btn').style.display = 'inline-block';
+        document.getElementById('profile-container').style.display = 'none';
+      }
+    }
+
+    document.getElementById('profile-pic').addEventListener('click', () => {
+      const dropdown = document.getElementById('dropdown-menu');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.getElementById('profile-link').addEventListener('click', () => {
+      document.getElementById('dropdown-menu').style.display = 'none';
+    });
+
+    document.getElementById('logout-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('loggedInUser');
+      document.getElementById('dropdown-menu').style.display = 'none';
+      window.location.href = '/static-pages/login.html';
+    });
+
+    // Call checkLoginStatus on page load
+    checkLoginStatus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>StudyExpert Dashboard</title>
+  <link rel="stylesheet" href="styles/styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* Navbar link hover effects */
+    .nav-link {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: #7c3aed;
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+    
+    .nav-link:hover {
+        color: #7c3aed !important;
+        background-color: rgba(124, 58, 237, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    .nav-link:hover::after {
+        width: 80%;
+    }
+
+    .carousel { scroll-snap-type: x mandatory; }
+    .carousel-item { scroll-snap-align: start; flex: 0 0 auto; width: 280px; }
+    #bg-slider { transition: opacity 1s ease-in-out; }
+
+    .background-particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: -10;
+      background-color: #000;
+    }
+
+    .background-particles::before,
+    .background-particles::after {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background-image: radial-gradient(#ffffff 1px, transparent 1px);
+      background-size: 25px 25px;
+      animation: particleFloat 80s linear infinite;
+      opacity: 0.08;
+    }
+
+    .background-particles::after {
+      animation-delay: -40s;
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-50%, -50%); }
+    }
+
+    .profile-section {
+      background-color: #e0f2fe;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      max-width: 900px;
+      margin: 2rem auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      color: #0c4a6e;
+    }
+
+    .profile-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #7c3aed;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+      cursor: pointer;
+      border: 2px solid #fff;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+      min-width: 120px;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .dropdown-menu a:hover {
+      background: #f0f0f0;
+    }
+    /* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+    .profile-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #7c3aed;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        border: 2px solid #fff;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        z-index: 1000;
+        min-width: 120px;
+    }
+
+    .dropdown-menu a {
+        display: block;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #333;
+        font-size: 0.9rem;
+    }
+
+    .dropdown-menu a:hover {
+        background: #f0f0f0;
+    }
+
+.footer {
+  background-color: #0967c5;
+  color: #ffffff;
+  padding: 2rem 1rem 1rem;
+  font-family: 'Arial', sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 100%;
+  margin: 0;
+  gap: 2rem;
+}
+
+.footer-container div {
+  flex: 1 1 250px;
+}
+
+.footer-about h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-about p,
+.footer-contact p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #00bfff;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 1rem;
+}
+
+/* Footer styles added as per user feedback */
+.footer {
+  background-color: #003366;
+  color: #ffffff;
+  padding: 2rem 1rem 1rem;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 2rem;
+  border-radius: 8px;
+}
+
+/* Removed duplicate .footer-container rule restricting width */
+
+.footer-container div {
+  flex: 1 1 250px;
+}
+
+.footer-about h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-about p,
+.footer-contact p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #00bfff;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 1rem;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1100px;
+  margin: auto;
+  gap: 2rem;
+}
+
+.footer-container div {
+  flex: 1 1 250px;
+}
+
+.footer-about h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-about p,
+.footer-contact p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #00bfff;
+  text-decoration: underline;
+}
+
+
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Responsive Container */
+.container {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: auto auto;
+    gap: 1px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 10px auto;
+    gap:15px;
+}
+
+/* Box Styling */
+.box {
+    border: 1px solid #673AB7; /* Stylish border */
+    border-radius: 15px; /* Rounded corners */
+    padding: 5px;
+    text-align: center;
+    background: #d7d6d7; /* Light purple background */
+    transition: 0.2s ease-in-out;
+}
+
+/* Hover Effect */
+.box:hover {
+    background: #9575CD;
+    color: rgb(162, 149, 149);
+    transform: scale(1.01); /* Slight scale-up */
+}
+
+/* Image Styling */
+.box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image fits within the box */
+    border-radius: 1px; /* Rounded corners for images */
+}
+
+/* Top Image Box - Spanning Full Width */
+.image1 {
+    grid-column: span 2;
+    height: 380px;
+}
+
+/* Bottom Image Boxes */
+.image2 {
+    height: 200px;
+    width: 50%;
+}
+.image3 {
+    height: 200px;
+     width: 90%;
+}
+
+/* Welcome overlay box on image1 */
+.welcome-overlay {
+    position:absolute ;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.6); /* Light transparent white */
+    padding: 15px 25px;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 6px rgba(146, 144, 144, 0.1);
+    font-weight: bold;
+    color: #1e0256;
+    font-size: 20px;
+    text-align: center;
+}
+.campus-text {
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #7761db;
+}
+.welcome-message {
+    font-size: 20px;
+    font-weight: 700;
+    color: #010007;
+}
+/*exam pre*/
+.exam-preparation {
+    max-width: 700px;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 15px; /* updated to 15px for consistency */
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    padding: 5px;
+    text-align: center;
+}
+
+.exam-preparation h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.exam-images {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.exam-images img {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+}
+
+.exam-images img:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+/* Navbar styles added from provided snippet */
+/* reset some defaults */
+.navbar,
+.navbar * { box-sizing: border-box; margin: 0; padding: 0; }
+.navbar__menu,
+.navbar__toggle-label { list-style: none; }
+
+/* container */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #003366;
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  position: relative;
+  font-family: sans-serif;
+}
+
+/* logo */
+.navbar__logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* menu */
+.navbar__menu {
+  display: flex;
+  gap: 1rem;
+}
+.navbar__menu li a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 0.8rem;
+  transition: background 0.2s;
+}
+.navbar__menu li a:hover {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+
+/* call-to-action buttons at end */
+.navbar__cta a {
+  background: #17086e;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+}
+.navbar__cta a:hover {
+  background: #1e0d8f;
+}
+
+/* hamburger toggle (hidden on desktop) */
+.navbar__toggle {
+  display: none;
+}
+.navbar__toggle-label {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+.navbar__toggle-label span {
+  width: 25px;
+  height: 3px;
+  background: #fff;
+  display: block;
+  border-radius: 2px;
+}
+
+/* responsive: mobile ≤768px */
+@media (max-width: 768px) {
+  .navbar__toggle {
+    display: block;
+  }
+  .navbar__toggle-label {
+    display: flex;
+  }
+  .navbar__menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #003366;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  /* when checked, expand menu */
+  .navbar__toggle:checked ~ .navbar__menu {
+    max-height: 500px;
+    padding-bottom: 1rem;
+  }
+  .navbar__menu li {
+    text-align: center;
+    margin: 0.5rem 0;
+  }
+  .navbar__cta {
+    margin-top: 0.5rem;
+  }
+}
+/*mini prof end*/
+/* 3. Styles for the section */
+.exam-section {
+  position: relative;
+  background: url('your-background-photo.jpg') center/cover no-repeat;
+  height: 280px;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px; /* updated to 15px for fully round curved corners */
+}
+
+/* Toast message for login first */
+#login-toast-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0,0,0,0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  z-index: 10000;
+  font-size: 16px;
+}
+
+.exam-section .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.exam-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  color: #fff;
+  background-color: transparent; /* transparent background */
+  justify-content: space-between;
+}
+
+.exam-left, .exam-cta, .exam-animation, .exam-right {
+  flex: 1 1 0;
+  max-width: 200px;
+  background-color: #6c5ce7; /* uniform background color */
+  border-radius: 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.exam-left img, .exam-right img {
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+}
+
+.exam-cta {
+  flex-direction: column;
+  text-align: center;
+}
+
+.exam-cta h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.exam-cta .btn {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 1rem;
+  border-radius: 15px;
+}
+
+.exam-animation {
+  padding: 0;
+  background-color: transparent;
+  max-width: 250px;
+  flex: 0 0 auto;
+}
+
+.exam-cta h2 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.6rem;
+  background-color: #6c5ce7;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #341f97;
+}
+
+@media (max-width: 600px) {
+  .exam-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Modern Navbar -->
+    <nav style="background-color: black; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); border-radius: 15px; margin: 10px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+            <!-- Logo Section -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="/logo.png" alt="StudyXpert Logo" style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #7c3aed; box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);">
+                <span style="font-size: 22px; font-weight: bold; color: white;">Study<span style="color: #7c3aed">X</span>pert</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="/static-pages/index.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Home
+                </a>
+                <a href="/static-pages/about.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    About
+                </a>
+                <a href="/static-pages/storage.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Storage
+                </a>
+                <a href="/static-pages/posts.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Posts
+                </a>
+                <a href="/static-pages/internships.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Internships
+                </a>
+                <a href="/static-pages/jobs.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Jobs
+                </a>
+                <a href="/static-pages/competitions.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Competitions
+                </a>
+                <a href="/static-pages/leadership.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Leadership
+                </a>
+                <a href="http://localhost:3000" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Research
+                </a>
+                <div id="auth-section">
+                    <div class="profile-container" id="profile-container" style="display:none;">
+                        <div class="profile-pic" id="profile-pic" style="width: 40px; height: 40px; border-radius: 50%; background-color: #7c3aed; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; cursor: pointer; border: 2px solid #fff;"></div>
+                        <div class="dropdown-menu" id="dropdown-menu" style="display:none;">
+                            <a href="/static-pages/profile.html" id="profile-link">Profile</a>
+                            <a href="#" id="logout-link">Logout</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </nav>
+
+  <div class="background-particles"></div>
+
+  <!-- Hero Section -->
+  <section id="hero-slider" class="relative h-[80vh] flex items-center justify-center text-white overflow-hidden">
+    <div id="bg-slider" class="absolute inset-0 w-full h-full bg-cover bg-center"></div>
+    <div class="absolute inset-0 bg-black bg-opacity-0"></div>
+  </section>
+
+  <!-- Introduction Section -->
+  <section class="max-w-4xl mx-auto px-4 py-8 text-center" style="background-color: black; color: white; border-radius: 0.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <h2 class="text-3xl font-bold mb-4">About StudyXpert</h2>
+    <p class="text-lg leading-relaxed">
+      StudyXpert is an innovative educational platform designed to enhance your learning experience. With AI-powered study tools, collaborative features, and comprehensive resource management, we help students achieve academic excellence while staying connected with opportunities.
+    </p>
+  </section>
+
+  <!-- 📁 Resources Row -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-4 py-6">
+    <div class="bg-green-200 p-6 rounded-xl shadow text-center">
+      <a href="./internships.html"><h3 class="text-xl font-bold">Internships</h3></a>
+      <p class="text-sm">Gain Practical Experience</p>
+    </div>
+    <div class="bg-blue-200 p-6 rounded-xl shadow text-center">
+      <a href="./jobs.html"><h3 class="text-xl font-bold">Jobs</h3></a>
+      <p class="text-sm">Explore Diverse Careers</p>
+    </div>
+    <div class="bg-yellow-200 p-6 rounded-xl shadow text-center">
+      <a href="./competitions.html"><h3 class="text-xl font-bold">Competitions</h3></a>
+      <p class="text-sm">Battle For Excellence</p>
+    </div>
+    <div class="bg-pink-200 p-6 rounded-xl shadow text-center">
+      <h3 class="text-xl font-bold">More</h3>
+      <p class="text-sm">Explore More Resources</p>
+    </div>
+  </section>
+
+  <!-- Dashboard Stats -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 py-6">
+    <!-- 📅 Google Calendar -->
+    <div class="bg-white p-4 rounded-xl shadow text-center cursor-pointer" onclick="window.open('https://calendar.google.com', '_blank')">
+      <h2 class="text-xl font-semibold">🗓 Calendar</h2>
+      <p class="mt-2 text-sm text-gray-600">Click to open Google Calendar</p>
+    </div>
+
+    <!-- 📝 Sticky Notes -->
+    <div class="bg-white p-4 rounded-xl shadow text-center relative" id="notes-section">
+      <h2 class="text-xl font-semibold">📝 Notes</h2>
+      <button onclick="document.getElementById('notes-modal').classList.remove('hidden')" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">Edit Notes</button>
+      <p id="notes-login-msg" class="text-sm text-red-500 hidden">Please log in to use notes.</p>
+    </div>
+
+    <!-- 📂 PDFs -->
+    <div class="bg-white p-4 rounded-xl shadow text-center">
+      <h2 class="text-xl font-semibold">📂 PDFs</h2>
+<a href="./storage.html" target="_blank" class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Go to User Storage</a>
+    </div>
+  </section>
+
+  <!-- 💬 Sticky Note Modal -->
+  <div id="notes-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+    <div class="bg-yellow-100 p-6 rounded-xl shadow-lg w-96">
+      <h3 class="text-lg font-bold mb-2">Your Sticky Note</h3>
+      <textarea id="note-text" class="w-full h-32 p-2 border border-gray-300 rounded"></textarea>
+      <div class="mt-4 flex justify-end gap-2">
+        <button onclick="document.getElementById('notes-modal').classList.add('hidden')" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+        <button onclick="saveNote()" class="bg-blue-600 text-white px-4 py-2 rounded">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Profile Section -->
+  <section id="profile-section" class="profile-section mt-10 px-4 max-w-4xl mx-auto text-blue-900" style="display: none;">
+    <a href="/static-pages/profile.html" style="text-decoration:none; color:inherit;">
+      <!-- Profile Card -->
+      <div class="bg-white p-6 rounded-2xl shadow-md flex flex-col md:flex-row items-center gap-6 cursor-pointer">
+        <!-- Profile Picture -->
+        <div class="relative">
+          <img id="profile-photo" src="https://via.placeholder.com/150" alt="Profile Photo"
+               class="rounded-full w-32 h-32 object-cover ring-2 ring-blue-600" />
+        </div>
+
+        <!-- Profile Info -->
+        <div>
+          <h2 id="profile-name" class="text-2xl font-bold mb-2">User Name</h2>
+          <p id="profile-email" class="text-gray-700 mb-1">user@example.com</p>
+          <p id="profile-cgpa" class="text-gray-700">CGPA: N/A</p>
+          <p id="streak-days" class="text-gray-700 mt-2">0 days</p>
+        </div>
+      </div>
+    </a>
+  </section>
+
+
+
+  <!-- Navigation Cards -->
+  <section class="mt-8 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <a href="./about.html" class="bg-white p-6 rounded-xl shadow hover:bg-blue-50 transition">
+      <h3 class="text-lg font-bold mb-2">🏫 About College</h3>
+      <p class="text-sm text-gray-600">Departments, events, and achievements.</p>
+    </a>
+    <a href="./leadership.html" class="bg-white p-6 rounded-xl shadow hover:bg-blue-50 transition">
+      <h3 class="text-lg font-bold mb-2">🏆 Leaderboard</h3>
+      <p class="text-sm text-gray-600">Top performing students.</p>
+    </a>
+    <a href="./posts.html" class="bg-white p-6 rounded-xl shadow hover:bg-blue-50 transition">
+      <h3 class="text-lg font-bold mb-2">📰 Weekly Posts</h3>
+      <p class="text-sm text-gray-600">Tips and student contributions.</p>
+    </a>
+  </section>
+
+  <!-- Exam Prep Section -->
+  <section class="exam-section mt-12 px-4 text-center">
+    <div class="relative flex flex-col items-center md:flex-row md:justify-between bg-white p-6 rounded-xl shadow">
+      <img src="https://cdn.dribbble.com/users/1162077/screenshots/5403918/focus-animation.gif" alt="Exam" class="w-40 md:w-48" />
+      <div class="my-4 md:my-0" style="min-width: 300px;">
+        <h2 class="text-2xl font-bold mb-2">Want to Use free AI models?</h2>
+        <a href="http://localhost:3000" class="inline-block px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Go to My Research</a>
+      </div>
+      <dotlottie-player
+        src="https://lottie.host/629bf175-83b3-4989-bddf-a487dda58416/4S0p1GNGos.lottie"
+        background="transparent"
+        speed="1"
+        style="width: 400px; height: 250px;"
+        loop
+        autoplay
+      ></dotlottie-player>
+    </div>
+  </section>
+
+   <!-- Footer -->
+ 
+  <!-- Footer -->
+  <footer class="footer" style="background-color: #2c3e50; padding: 2rem 0; color: white;">
+    <div class="footer-container" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+      <div class="footer-about" style="flex: 1 1 250px;">
+        <h3>StudyXpert</h3>
+        <p>Your partner in academic excellence and career success.</p>
+      </div>
+      <div class="footer-links" style="flex: 1 1 250px;">
+        <h4>Quick Links</h4>
+        <ul style="list-style: none; padding: 0;">
+          <li><a href="index.html" style="color: white; text-decoration: none;">Home</a></li>
+          <li><a href="aboutus.html" style="color: white; text-decoration: none;">About Us</a></li>
+          <li><a href="leadership.html" style="color: white; text-decoration: none;">Leadership</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact" style="flex: 1 1 250px;">
+        <h4>Contact</h4>
+        <p>Email: support@studyexpert.com</p>
+        <p>Phone: +91 7382612327</p>
+        <p>Address: Vignan College, Duvvada</p>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <!-- Scripts -->
+  <script>
+    const { createClient } = window.supabase;
+    const supabaseUrl = 'https://jgqltmpfueoxjeoauxcs.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpncWx0bXBmdWVveGplb2F1eGNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5ODI5NzIsImV4cCI6MjA2NzU1ODk3Mn0.Fu7C86_QuZbhyZ1b7tMXZ5MaVbIMmM4oHflFgpJuP90';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      const isLoggedIn = !!user;
+
+      document.getElementById('notes-login-msg').style.display = 'none'; // Always allow notes
+
+      // Show profile section only if logged in
+      if (isLoggedIn) {
+        // Determine table based on user role
+        let profileData = null;
+        let tableName = '';
+
+        // Try student table first
+        const { data: studentData } = await supabase
+          .from('student_profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (studentData) {
+          profileData = studentData;
+          tableName = 'student_profiles';
+        } else {
+          // Try admin table
+          const { data: adminData } = await supabase
+            .from('admin_profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+          if (adminData) {
+            profileData = adminData;
+            tableName = 'admin_profiles';
+          }
+        }
+
+        if (profileData) {
+          document.getElementById('profile-section').style.display = 'block';
+          // Profile
+          document.getElementById('profile-photo').src = profileData.profile_photo || 'https://via.placeholder.com/150';
+          document.getElementById('profile-name').textContent = profileData.full_name || 'User Name';
+          document.getElementById('profile-email').textContent = profileData.email || 'user@example.com';
+          document.getElementById('profile-cgpa').textContent = 'CGPA: N/A'; // You can add CGPA field to tables if needed
+        }
+
+        // Streak logic: update streak count based on last login date
+        const streakDaysElem = document.getElementById('streak-days');
+        const lastLoginDateStr = localStorage.getItem('lastLoginDate');
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        if (lastLoginDateStr) {
+          const lastLoginDate = new Date(lastLoginDateStr);
+          const today = new Date(todayStr);
+          const diffTime = today - lastLoginDate;
+          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+          if (diffDays === 1) {
+            // Increment streak
+            let streakCount = parseInt(localStorage.getItem('streakCount') || '0', 10);
+            streakCount += 1;
+            localStorage.setItem('streakCount', streakCount.toString());
+            streakDaysElem.textContent = `${streakCount} days`;
+          } else if (diffDays > 1) {
+            // Reset streak
+            localStorage.setItem('streakCount', '1');
+            streakDaysElem.textContent = '1 day';
+          } else {
+            // Same day login, keep streak
+            const streakCount = localStorage.getItem('streakCount') || '0';
+            streakDaysElem.textContent = `${streakCount} days`;
+          }
+        } else {
+          // First login
+          localStorage.setItem('streakCount', '1');
+          streakDaysElem.textContent = '1 day';
+        }
+        // Update last login date
+        localStorage.setItem('lastLoginDate', todayStr);
+      }
+    });
+
+    // Background slider
+    const images = [
+      "https://vignaniit.edu.in/images/nirf.jpeg",
+      "https://vignaniit.edu.in/images/WEB_0.jpg",
+      "https://vignaniit.edu.in/images/SEnergyConservationA.jpeg"
+    ];
+    let currentImage = 0;
+    const bgSlider = document.getElementById("bg-slider");
+
+    function changeBackground() {
+      bgSlider.style.opacity = 0;
+      setTimeout(() => {
+        bgSlider.style.backgroundImage = `url('${images[currentImage]}')`;
+        bgSlider.style.opacity = 1;
+        currentImage = (currentImage + 1) % images.length;
+      }, 500);
+    }
+
+    window.onload = () => {
+      bgSlider.style.backgroundImage = `url('${images[0]}')`;
+      setInterval(changeBackground, 4000);
+    };
+  </script>
+
+  <script>
+
+    // Function to load profile data from Supabase
+    async function loadProfile() {
+      const user = supabase.auth.user();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        console.error('Error loading profile:', error);
+        return;
+      }
+
+      if (data) {
+        document.getElementById('email-input').value = data.email || '';
+        document.getElementById('linkedin-input').value = data.linkedin || '';
+        document.getElementById('github-input').value = data.github || '';
+        document.getElementById('certs-input').value = data.certifications || '';
+        document.getElementById('courses-input').value = data.courses || '';
+        if (data.photo_url) {
+          document.getElementById('profile-photo').src = data.photo_url;
+        }
+      }
+    }
+
+    // Function to save profile data to Supabase
+    async function saveProfile() {
+      const user = supabase.auth.user();
+      if (!user) {
+        alert('User not logged in');
+        return;
+      }
+
+      const email = document.getElementById('email-input').value;
+      const linkedin = document.getElementById('linkedin-input').value;
+      const github = document.getElementById('github-input').value;
+      const certifications = document.getElementById('certs-input').value;
+      const courses = document.getElementById('courses-input').value;
+      const photoUrl = document.getElementById('profile-photo').src;
+
+      const updates = {
+        id: user.id,
+        email,
+        linkedin,
+        github,
+        certifications,
+        courses,
+        photo_url: photoUrl,
+        updated_at: new Date(),
+      };
+
+      const { error } = await supabase.from('profiles').upsert(updates);
+
+      if (error) {
+        alert('Error saving profile: ' + error.message);
+      } else {
+        alert('Profile saved successfully');
+      }
+    }
+
+    // Attach saveProfile to save button
+    document.getElementById('save-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      saveProfile();
+    });
+
+    // Load profile on page load
+    window.addEventListener('load', () => {
+      loadProfile();
+    });
+
+    // Profile functionality
+    function getInitials(name) {
+      if (!name) return '';
+      const names = name.trim().split(' ');
+      if (names.length === 1) return names[0].charAt(0).toUpperCase();
+      return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+    }
+
+    async function checkLoginStatus() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Get profile data to display initials
+        let profileData = null;
+
+        // Try student table first
+        const { data: studentData } = await supabase
+          .from('student_profiles')
+          .select('full_name')
+          .eq('id', user.id)
+          .single();
+
+        if (studentData) {
+          profileData = studentData;
+        } else {
+          // Try admin table
+          const { data: adminData } = await supabase
+            .from('admin_profiles')
+            .select('full_name')
+            .eq('id', user.id)
+            .single();
+
+          if (adminData) {
+            profileData = adminData;
+          }
+        }
+
+        if (profileData) {
+          document.getElementById('profile-container').style.display = 'inline-block';
+          document.getElementById('profile-pic').textContent = getInitials(profileData.full_name);
+        }
+      } else {
+        document.getElementById('profile-container').style.display = 'none';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await checkLoginStatus();
+
+      const profilePic = document.getElementById('profile-pic');
+      const dropdownMenu = document.getElementById('dropdown-menu');
+      const profileLink = document.getElementById('profile-link');
+      const logoutLink = document.getElementById('logout-link');
+
+      if (profilePic) {
+        profilePic.addEventListener('click', () => {
+          dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+      }
+
+      if (profileLink) {
+        profileLink.addEventListener('click', () => {
+          dropdownMenu.style.display = 'none';
+        });
+      }
+
+      if (logoutLink) {
+        logoutLink.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const { error } = await supabase.auth.signOut();
+          if (error) {
+            console.error('Error logging out:', error);
+          }
+          localStorage.removeItem('loggedInUser');
+          dropdownMenu.style.display = 'none';
+          window.location.href = '/static-pages/login.html';
+        });
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!profilePic.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          dropdownMenu.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

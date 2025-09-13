@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Signup Details - StudyXpert</title>
+  <link rel="stylesheet" href="styles/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      margin: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: auto;
+      max-width: 900px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #667eea;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    .back-button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-align: center;
+      text-decoration: none;
+      width: 150px;
+    }
+    .back-button:hover {
+      background-color: #5563c1;
+    }
+  </style>
+</head>
+<body>
+  <h1>All Signup Details</h1>
+  <table id="signupTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Profile Pic</th>
+        <th>Role</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>ID Number</th>
+        <th>Date of Birth</th>
+        <th>LinkedIn</th>
+        <th>GitHub</th>
+        <th>Certifications</th>
+        <th>Courses & Trainings</th>
+        <th>Password</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows will be populated by JS -->
+    </tbody>
+  </table>
+  <a href="login.html" class="back-button">Back to Login</a>
+
+  <script>
+    const { createClient } = window.supabase;
+    const supabaseUrl = 'https://jgqltmpfueoxjeoauxcs.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpncWx0bXBmdWVveGplb2F1eGNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5ODI5NzIsImV4cCI6MjA2NzU1ODk3Mn0.Fu7C86_QuZbhyZ1b7tMXZ5MaVbIMmM4oHflFgpJuP90';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function loadSignupDetails() {
+      const tbody = document.querySelector('#signupTable tbody');
+      tbody.innerHTML = '';
+
+      try {
+        const { data: profiles, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error fetching profiles:', error);
+          const tr = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 13;
+          td.textContent = 'Error loading signup details.';
+          td.style.textAlign = 'center';
+          tr.appendChild(td);
+          tbody.appendChild(tr);
+          return;
+        }
+
+        if (!profiles || profiles.length === 0) {
+          const tr = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 13;
+          td.textContent = 'No signup details available.';
+          td.style.textAlign = 'center';
+          tr.appendChild(td);
+          tbody.appendChild(tr);
+          return;
+        }
+
+        profiles.forEach((profile, index) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td><img src="${profile.profile_photo || 'https://via.placeholder.com/40'}" alt="Profile Pic" style="width:40px; height:40px; border-radius:50%; object-fit:cover;"></td>
+            <td>${profile.role || 'student'}</td>
+            <td>${profile.full_name}</td>
+            <td>${profile.username}</td>
+            <td>${profile.email}</td>
+            <td>${profile.student_id}</td>
+            <td>${profile.dob || ''}</td>
+            <td>${profile.linkedin || ''}</td>
+            <td>${profile.github || ''}</td>
+            <td>${profile.certifications || ''}</td>
+            <td>${profile.courses || ''}</td>
+            <td>Hidden</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('Error:', err);
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 13;
+        td.textContent = 'Error loading data.';
+        td.style.textAlign = 'center';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
+    }
+
+    window.onload = loadSignupDetails;
+  </script>
+</body>
+</html>

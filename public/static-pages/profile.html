@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - StudyXpert</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6ff;
+            color: #333;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 40px 50px;
+            box-sizing: border-box;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            margin-top: 80px;
+            text-align: left;
+            transition: box-shadow 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container:hover {
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .profile-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #3b3b3b;
+            margin-bottom: 30px;
+            letter-spacing: 1.5px;
+            text-align: center;
+        }
+
+        #profile-content {
+            margin-bottom: 50px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .profile-photo-wrapper {
+            flex-shrink: 0;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+            cursor: pointer;
+            position: relative;
+        }
+
+        #profile-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-photo-wrapper:hover #profile-photo {
+            transform: scale(1.05);
+        }
+
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        .info-item {
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        #expanded-profile {
+            background: #f9f9ff;
+            border-radius: 15px;
+            padding: 35px 40px;
+            box-shadow: 0 10px 40px rgba(124, 58, 237, 0.1);
+            margin-top: 40px;
+            transition: background-color 0.3s ease;
+        }
+
+        #expanded-profile h3 {
+            color: #7c3aed;
+            font-weight: 700;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #7c3aed;
+            padding-bottom: 10px;
+        }
+
+        #profile-form label {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 1rem;
+        }
+
+        #profile-form input,
+        #profile-form textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid #c1b9e0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            color: #4a4a4a;
+            transition: border-color 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #profile-form input:focus,
+        #profile-form textarea:focus {
+            border-color: #7c3aed;
+            outline: none;
+            box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+        }
+
+        #save-btn {
+            background-color: #7c3aed;
+            font-weight: 700;
+            padding: 14px 36px;
+            border-radius: 16px;
+            transition: background-color 0.3s ease;
+            font-size: 1.1rem;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #save-btn:hover {
+            background-color: #5a2d9c;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 14px 36px;
+            background-color: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 16px;
+            margin-top: 40px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+
+        .back-btn:hover {
+            background-color: #5563c1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar (same as login.html) -->
+    <nav style="background-color: black; padding: 12px 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); border-radius: 15px; margin: 10px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+            <!-- Logo Section -->
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="/logo.png" alt="StudyXpert Logo" style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #7c3aed; box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);">
+                <span style="font-size: 22px; font-weight: bold; color: white;">Study<span style="color: #7c3aed">X</span>pert</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <a href="/static-pages/index.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Home
+                </a>
+                <a href="/static-pages/about.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    About
+                </a>
+                <a href="/static-pages/storage.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Storage
+                </a>
+                <a href="/static-pages/posts.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Posts
+                </a>
+                <a href="/static-pages/internships.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Internships
+                </a>
+                <a href="/static-pages/jobs.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Jobs
+                </a>
+                <a href="/static-pages/competitions.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Competitions
+                </a>
+                <a href="/static-pages/leadership.html" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Leadership
+                </a>
+                <a href="http://localhost:3000" class="nav-link" style="display: inline-block; text-decoration: none; color: white; padding: 6px 12px; margin: 0 2px; border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                    Research
+                </a>
+                <div id="auth-section">
+                    <a href="/static-pages/login.html" class="login-btn" id="login-btn" style="display: inline-block; background-color: #7c3aed; color: white; padding: 6px 16px; margin-left: 8px; border-radius: 20px; text-decoration: none; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#6d28d9'" onmouseout="this.style.backgroundColor='#7c3aed'">
+                        Login
+                    </a>
+                    <div class="profile-container" id="profile-container" style="display:none;">
+                        <div class="profile-pic" id="profile-pic" style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; background-color: #667eea; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;"></div>
+                        <div class="dropdown-menu" id="dropdown-menu" style="display:none; position: absolute; top: 50px; right: 0; background: white; border: 1px solid #ccc; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 1000; min-width: 120px;">
+                            <a href="/static-pages/profile.html" id="profile-link" style="display: block; padding: 10px 15px; text-decoration: none; color: #333; font-size: 0.9rem;">Profile</a>
+                            <a href="#" id="logout-link" style="display: block; padding: 10px 15px; text-decoration: none; color: #333; font-size: 0.9rem;">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-header">
+            <h1>Your Profile</h1>
+        </div>
+        <div id="profile-content">
+            <!-- Profile info will be inserted here -->
+        </div>
+
+        <!-- Expandable Full Profile -->
+        <div id="expanded-profile" class="bg-white p-6 rounded-2xl shadow-md mt-4">
+            <h3 class="text-2xl font-semibold mb-4">📄 Edit Professional Profile</h3>
+            <form id="profile-form" class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                <div>
+                    <label class="block mb-1 font-medium">Email</label>
+                    <input id="email-input" type="email" class="w-full border rounded px-3 py-2"/>
+
+                    <label class="block mt-4 mb-1 font-medium">LinkedIn</label>
+                    <input id="linkedin-input" type="url" class="w-full border rounded px-3 py-2"/>
+
+                    <label class="block mt-4 mb-1 font-medium">GitHub</label>
+                    <input id="github-input" type="url" class="w-full border rounded px-3 py-2"/>
+                </div>
+
+                <div>
+                    <label class="block mb-1 font-medium">Certifications</label>
+                    <textarea id="certs-input" class="w-full border rounded px-3 py-2" rows="4"></textarea>
+
+                    <label class="block mt-4 mb-1 font-medium">Courses & Trainings</label>
+                    <textarea id="courses-input" class="w-full border rounded px-3 py-2" rows="4"></textarea>
+                </div>
+            </form>
+
+            <!-- Save Button -->
+            <div class="flex justify-end mt-6">
+                <button id="save-btn" class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">
+                    Save Profile
+                </button>
+            </div>
+        </div>
+        <a href="/static-pages/index.html" class="back-btn">Back to Home</a>
+    </div>
+
+    <script>
+        const { createClient } = window.supabase;
+        const supabaseUrl = 'https://jgqltmpfueoxjeoauxcs.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpncWx0bXBmdWVveGplb2F1eGNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5ODI5NzIsImV4cCI6MjA2NzU1ODk3Mn0.Fu7C86_QuZbhyZ1b7tMXZ5MaVbIMmM4oHflFgpJuP90';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Profile functionality
+            function getInitials(name) {
+                if (!name) return '';
+                const names = name.trim().split(' ');
+                if (names.length === 1) return names[0].charAt(0).toUpperCase();
+                return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+            }
+
+            async function checkLoginStatus() {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    const user = session.user;
+                    document.getElementById('login-btn').style.display = 'none';
+                    document.getElementById('profile-container').style.display = 'inline-block';
+                    document.getElementById('profile-pic').textContent = getInitials(user.user_metadata?.full_name || user.email);
+
+                    // Fetch profile data
+                    const { data: profileData, error } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', user.id)
+                        .single();
+
+                    if (error) {
+                        alert('Error fetching profile: ' + error.message);
+                        return;
+                    }
+
+                    // Display profile info
+                    const profileContent = document.getElementById('profile-content');
+                    profileContent.innerHTML = `
+                        <div class="relative">
+                            <img id="profile-photo" src="https://via.placeholder.com/150" alt="Profile Photo"
+                                 class="rounded-full w-32 h-32 object-cover ring-2 ring-blue-600 mx-auto" />
+                            <input type="file" id="photo-upload" accept="image/*"
+                                   class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-full opacity-0 cursor-pointer rounded-full" />
+                            <p class="text-center text-xs text-gray-600 mt-1">Click to change</p>
+                        </div>
+                        <div class="profile-info">
+                            <div class="info-item">
+                                <div class="info-label">Full Name:</div>
+                                <div class="info-value">${profileData.full_name}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Username:</div>
+                                <div class="info-value">${profileData.username}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Email:</div>
+                                <div class="info-value">${profileData.email}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Student ID:</div>
+                                <div class="info-value">${profileData.student_id || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Department:</div>
+                                <div class="info-value">${profileData.department || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Year:</div>
+                                <div class="info-value">${profileData.year || 'N/A'}</div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Populate form
+                    document.getElementById("email-input").value = profileData.email;
+                    document.getElementById("linkedin-input").value = profileData.linkedin || '';
+                    document.getElementById("github-input").value = profileData.github || '';
+                    document.getElementById("certs-input").value = profileData.certifications || '';
+                    document.getElementById("courses-input").value = profileData.courses || '';
+                } else {
+                    document.getElementById('login-btn').style.display = 'inline-block';
+                    document.getElementById('profile-container').style.display = 'none';
+                    // Redirect to login if not logged in
+                    window.location.href = '/static-pages/login.html';
+                }
+            }
+
+            document.getElementById('profile-pic').addEventListener('click', () => {
+                const dropdown = document.getElementById('dropdown-menu');
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            });
+
+            document.getElementById('logout-link').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                document.getElementById('dropdown-menu').style.display = 'none';
+                window.location.href = '/static-pages/login.html';
+            });
+
+            // Initialize
+            await checkLoginStatus();
+
+            // Profile picture upload (keep local for now)
+            document.getElementById('photo-upload').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file && file.type.startsWith("image/")) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const base64Image = reader.result;
+                        document.getElementById("profile-photo").src = base64Image;
+                        // Store image in localStorage
+                        localStorage.setItem('profilePhoto', base64Image);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Load profile photo from localStorage on page load
+            const photo = localStorage.getItem('profilePhoto');
+            if (photo) {
+                document.getElementById('profile-photo').src = photo;
+            }
+
+            // Save button
+            document.getElementById("save-btn").addEventListener("click", async () => {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    alert('Not logged in');
+                    return;
+                }
+
+                const linkedin = document.getElementById("linkedin-input").value;
+                const github = document.getElementById("github-input").value;
+                const certs = document.getElementById("certs-input").value;
+                const courses = document.getElementById("courses-input").value;
+
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({
+                        linkedin: linkedin,
+                        github: github,
+                        certifications: certs,
+                        courses: courses,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', session.user.id);
+
+                if (error) {
+                    alert('Error updating profile: ' + error.message);
+                } else {
+                    alert("Profile updated successfully!");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
