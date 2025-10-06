@@ -830,20 +830,14 @@ function HomeComponent() {
         />
         <main className='max-w-4xl mx-auto space-y-8'>
           <div className='mb-3'>
-            <h1 className='mb-2 text-center text-gray-800 flex items-center justify-center gap-2 dark:text-foreground'>
-              <img
-                src='/apple-icon.png'
-                alt='Open Deep Research'
-                className='w-6 h-6 sm:w-8 sm:h-8 rounded-full'
-              />
+            <h1 className='mb-2 text-center text-gray-800 dark:text-foreground'>
               <span className='text-xl sm:text-3xl font-bold font-heading'>
-                Open Deep Research
+                Open Research
               </span>
             </h1>
             <div className='text-center space-y-3 mb-8'>
               <p className='text-gray-600 dark:text-muted-foreground'>
-                Open source alternative to Deep Research. Generate reports with
-                AI based on search results.
+                Open source alternative to Deep Research. Generate reports with AI based on search results.
               </p>
               <div className='flex flex-wrap justify-center items-center gap-2'>
                 <Button
@@ -858,24 +852,195 @@ function HomeComponent() {
               </div>
             </div>
 
-            <div className='flex justify-center items-center'>
-              <div className='flex items-center space-x-2'>
-                <Checkbox
-                  id='agent-mode'
-                  checked={state.isAgentMode}
-                  className='w-4 h-4'
-                  onCheckedChange={(checked) =>
-                    updateState({ isAgentMode: checked as boolean })
-                  }
-                />
-                <label
-                  htmlFor='agent-mode'
-                  className='text-xs sm:text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                >
-                  Agent Mode (Automatic search and report generation)
-                </label>
-              </div>
+            <div className='border border-gray-300 rounded-lg p-4'>
+              <form
+                ref={formRef}
+                onSubmit={state.isAgentMode ? handleAgentSearch : handleSearch}
+                className='space-y-4'
+              >
+                {!state.isAgentMode ? (
+                  <>
+                    <div className='flex gap-2 mb-4'>
+                      <div className='relative flex-1'>
+                        <Input
+                          type='text'
+                          value={state.query}
+                          onChange={(e) => updateState({ query: e.target.value })}
+                          placeholder='Enter your search query...'
+                          className='pr-8'
+                        />
+                        <Search className='absolute right-2 top-2 h-5 w-5 text-gray-400' />
+                      </div>
+                      <Button
+                        type='submit'
+                        disabled={state.status.loading}
+                        className='w-auto'
+                      >
+                        {state.status.loading ? 'Searching...' : 'Search'}
+                      </Button>
+                    </div>
+
+                    <div className='flex items-center space-x-4 mb-4'>
+                      <Checkbox
+                        id='agent-mode'
+                        checked={state.isAgentMode}
+                        className='w-4 h-4'
+                        onCheckedChange={(checked) =>
+                          updateState({ isAgentMode: checked as boolean })
+                        }
+                      />
+                      <label
+                        htmlFor='agent-mode'
+                        className='text-xs sm:text-sm font-medium leading-none text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                      >
+                        Agent Mode
+                      </label>
+                    </div>
+
+                    <div className='flex gap-2 mb-4'>
+                      <Select
+                        value={state.timeFilter}
+                        onValueChange={(value) =>
+                          updateState({ timeFilter: value })
+                        }
+                      >
+                        <SelectTrigger className='flex-1 sm:flex-initial sm:w-[140px]'>
+                          <SelectValue placeholder='Select time range' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {timeFilters.map((filter) => (
+                            <SelectItem
+                              key={filter.value}
+                              value={filter.value}
+                            >
+                              {filter.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <ModelSelect
+                        value={state.selectedModel}
+                        onValueChange={(value) =>
+                          updateState({ selectedModel: value })
+                        }
+                        triggerClassName='flex-1 sm:flex-initial sm:w-[200px]'
+                      />
+
+                    </div>
+
+                    <div className='flex gap-2'>
+                      <Input
+                        type='url'
+                        value={state.newUrl}
+                        onChange={(e) => updateState({ newUrl: e.target.value })}
+                        placeholder='Add custom URL...'
+                        className='flex-1'
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault()
+                            handleAddCustomUrl(e)
+                          }
+                        }}
+                      />
+                      <Button
+                        type='button'
+                        variant='outline'
+                        onClick={handleAddCustomUrl}
+                        className='hidden sm:inline-flex items-center gap-2'
+                      >
+                        <Plus className='h-4 w-4' />
+                        Add URL
+                      </Button>
+                      <Button
+                        type='button'
+                        variant='outline'
+                        className='sm:hidden'
+                        size='icon'
+                      >
+                        <Plus className='h-4 w-4' />
+                      </Button>
+                      <div className='relative'>
+                        <Input
+                          type='file'
+                          onChange={handleFileUpload}
+                          className='absolute inset-0 opacity-0 cursor-pointer'
+                          accept={SUPPORTED_FILE_TYPES}
+                        />
+                        <Button
+                          type='button'
+                          variant='outline'
+                          className='hidden sm:inline-flex items-center gap-2 pointer-events-none'
+                        >
+                          <UploadIcon className='h-4 w-4' />
+                          Upload File
+                        </Button>
+                        <Button
+                          type='button'
+                          variant='outline'
+                          size='icon'
+                          className='sm:hidden pointer-events-none'
+                        >
+                          <UploadIcon className='h-4 w-4' />
+                        </Button>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className='space-y-4 sm:space-y-6 lg:space-y-0'>
+                    <div className='flex flex-col sm:flex-row lg:items-center gap-2'>
+                      <div className='relative flex-1'>
+                        <Input
+                          value={state.query || state.reportPrompt}
+                          onChange={(e) => {
+                            updateState({
+                              reportPrompt: e.target.value,
+                              query: '',
+                            })
+                          }}
+                          placeholder="What would you like to research? (e.g., 'Tesla Q4 2024 financial performance and market impact')"
+                          className='pr-8 text-lg'
+                        />
+                        <Brain className='absolute right-4 top-3 h-5 w-5 text-gray-400' />
+                      </div>
+                      <div className='flex flex-col sm:flex-row lg:flex-nowrap gap-2 sm:items-center'>
+                        <div className='w-full sm:w-[200px]'>
+                          <ModelSelect
+                            value={state.selectedModel}
+                            onValueChange={(value) =>
+                              updateState({ selectedModel: value })
+                            }
+                            triggerClassName='w-full sm:w-[200px]'
+                          />
+                        </div>
+                        <Button
+                          type='submit'
+                          disabled={state.status.agentStep !== 'idle'}
+                          className='w-full sm:w-auto lg:w-[200px] bg-blue-600 hover:bg-blue-700 text-white whitespace-nowrap'
+                        >
+                          {state.status.agentStep !== 'idle' ? (
+                            <span className='flex items-center gap-2'>
+                              <Loader2 className='h-4 w-4 animate-spin' />
+                              {
+                                {
+                                  processing: 'Planning Research...',
+                                  searching: 'Searching Web...',
+                                  analyzing: 'Analyzing Results...',
+                                  generating: 'Writing Report...',
+                                }[state.status.agentStep]
+                              }
+                            </span>
+                          ) : (
+                            'Start Deep Research'
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </form>
             </div>
+
             {state.status.agentStep !== 'idle' && (
               <div className='mb-4 p-4 bg-blue-50 rounded-lg dark:bg-blue-900/20'>
                 <div className='flex items-center gap-3 mb-3'>
@@ -910,177 +1075,6 @@ function HomeComponent() {
                 </div>
               </div>
             )}
-            <form
-              ref={formRef}
-              onSubmit={state.isAgentMode ? handleAgentSearch : handleSearch}
-              className='space-y-4'
-            >
-              {!state.isAgentMode ? (
-                <>
-                  <div className='flex flex-col sm:flex-row gap-2'>
-                    <div className='relative flex-1'>
-                      <Input
-                        type='text'
-                        value={state.query}
-                        onChange={(e) => updateState({ query: e.target.value })}
-                        placeholder='Enter your search query...'
-                        className='pr-8'
-                      />
-                      <Search className='absolute right-2 top-2 h-5 w-5 text-gray-400' />
-                    </div>
-
-                    <div className='flex flex-col sm:flex-row gap-2 sm:items-center'>
-                      <div className='flex gap-2 w-full sm:w-auto'>
-                        <Select
-                          value={state.timeFilter}
-                          onValueChange={(value) =>
-                            updateState({ timeFilter: value })
-                          }
-                        >
-                          <SelectTrigger className='flex-1 sm:flex-initial sm:w-[140px]'>
-                            <SelectValue placeholder='Select time range' />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {timeFilters.map((filter) => (
-                              <SelectItem
-                                key={filter.value}
-                                value={filter.value}
-                              >
-                                {filter.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-
-                        <ModelSelect
-                          value={state.selectedModel}
-                          onValueChange={(value) =>
-                            updateState({ selectedModel: value })
-                          }
-                          triggerClassName='flex-1 sm:flex-initial sm:w-[200px]'
-                        />
-                      </div>
-
-                      <Button
-                        type='submit'
-                        disabled={state.status.loading}
-                        className='w-full sm:w-auto'
-                      >
-                        {state.status.loading ? 'Searching...' : 'Search'}
-                      </Button>
-                    </div>
-                  </div>
-                  <div className='flex gap-2'>
-                    <Input
-                      type='url'
-                      value={state.newUrl}
-                      onChange={(e) => updateState({ newUrl: e.target.value })}
-                      placeholder='Add custom URL...'
-                      className='flex-1'
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault()
-                          handleAddCustomUrl(e)
-                        }
-                      }}
-                    />
-                    <Button
-                      type='button'
-                      variant='outline'
-                      onClick={handleAddCustomUrl}
-                      className='hidden sm:inline-flex items-center gap-2'
-                    >
-                      <Plus className='h-4 w-4' />
-                      Add URL
-                    </Button>
-                    <Button
-                      type='button'
-                      variant='outline'
-                      onClick={handleAddCustomUrl}
-                      className='sm:hidden'
-                      size='icon'
-                    >
-                      <Plus className='h-4 w-4' />
-                    </Button>
-                    <div className='relative'>
-                      <Input
-                        type='file'
-                        onChange={handleFileUpload}
-                        className='absolute inset-0 opacity-0 cursor-pointer'
-                        accept={SUPPORTED_FILE_TYPES}
-                      />
-                      <Button
-                        type='button'
-                        variant='outline'
-                        className='hidden sm:inline-flex items-center gap-2 pointer-events-none'
-                      >
-                        <UploadIcon className='h-4 w-4' />
-                        Upload File
-                      </Button>
-                      <Button
-                        type='button'
-                        variant='outline'
-                        size='icon'
-                        className='sm:hidden pointer-events-none'
-                      >
-                        <UploadIcon className='h-4 w-4' />
-                      </Button>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className='space-y-4 sm:space-y-6 lg:space-y-0'>
-                  <div className='flex flex-col sm:flex-row lg:items-center gap-2'>
-                    <div className='relative flex-1'>
-                      <Input
-                        value={state.query || state.reportPrompt}
-                        onChange={(e) => {
-                          updateState({
-                            reportPrompt: e.target.value,
-                            query: '',
-                          })
-                        }}
-                        placeholder="What would you like to research? (e.g., 'Tesla Q4 2024 financial performance and market impact')"
-                        className='pr-8 text-lg'
-                      />
-                      <Brain className='absolute right-4 top-3 h-5 w-5 text-gray-400' />
-                    </div>
-                    <div className='flex flex-col sm:flex-row lg:flex-nowrap gap-2 sm:items-center'>
-                      <div className='w-full sm:w-[200px]'>
-                        <ModelSelect
-                          value={state.selectedModel}
-                          onValueChange={(value) =>
-                            updateState({ selectedModel: value })
-                          }
-                          triggerClassName='w-full sm:w-[200px]'
-                        />
-                      </div>
-                      <Button
-                        type='submit'
-                        disabled={state.status.agentStep !== 'idle'}
-                        className='w-full sm:w-auto lg:w-[200px] bg-blue-600 hover:bg-blue-700 text-white whitespace-nowrap'
-                      >
-                        {state.status.agentStep !== 'idle' ? (
-                          <span className='flex items-center gap-2'>
-                            <Loader2 className='h-4 w-4 animate-spin' />
-                            {
-                              {
-                                processing: 'Planning Research...',
-                                searching: 'Searching Web...',
-                                analyzing: 'Analyzing Results...',
-                                generating: 'Writing Report...',
-                              }[state.status.agentStep]
-                            }
-                          </span>
-                        ) : (
-                          'Start Deep Research'
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </form>
           </div>
 
           <Separator className='my-8' />
