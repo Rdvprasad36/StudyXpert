@@ -1,27 +1,18 @@
-
 import { Student, Admin, AuthCredentials, StudentSignupData, AdminSignupData, AuthResponse } from './auth-types'
-import { supabase } from './supabase-client'
+import { getUsers, saveUsers, getCurrentUser, setCurrentUser, generateId } from './localStorage-utils'
 
 export class AuthService {
   // Student Authentication Methods
   static async studentSignup(data: StudentSignupData): Promise<AuthResponse> {
     try {
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password
-      })
-
-      if (signUpError) {
-        return { success: false, error: signUpError.message }
+      const users = getUsers()
+      // Check if email already exists
+      if (users.some(u => u.email === data.email)) {
+        return { success: false, error: 'Email already exists' }
       }
 
-      if (!signUpData.user) {
-        return { success: false, error: 'User signup failed' }
-      }
-
-      // Insert profile data into 'profiles' table
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: signUpData.user.id,
+      const newUser: Student = {
+        id: generateId(),
         email: data.email,
         username: data.username,
         full_name: data.full_name,
@@ -30,13 +21,12 @@ export class AuthService {
         year: data.year,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
-      })
-
-      if (profileError) {
-        return { success: false, error: profileError.message }
       }
 
-      return { success: true, user: { ...data, id: signUpData.user.id } }
+      users.push(newUser)
+      saveUsers(users)
+
+      return { success: true, user: newUser }
     } catch (error) {
       return { success: false, error: (error as Error).message }
     }
@@ -44,31 +34,15 @@ export class AuthService {
 
   static async studentLogin(credentials: AuthCredentials): Promise<AuthResponse> {
     try {
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: credentials.email,
-        password: credentials.password
-      })
+      const users = getUsers()
+      const user = users.find(u => u.email === credentials.email && 'password' in u && u.password === credentials.password && 'student_id' in u) as Student
 
-      if (signInError) {
-        return { success: false, error: signInError.message }
+      if (!user) {
+        return { success: false, error: 'Invalid credentials' }
       }
 
-      if (!signInData.user) {
-        return { success: false, error: 'User login failed' }
-      }
-
-      // Fetch profile data
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', signInData.user.id)
-        .single()
-
-      if (profileError) {
-        return { success: false, error: profileError.message }
-      }
-
-      return { success: true, user: profileData }
+      setCurrentUser(user)
+      return { success: true, user }
     } catch (error) {
       return { success: false, error: (error as Error).message }
     }
@@ -77,22 +51,14 @@ export class AuthService {
   // Admin Authentication Methods
   static async adminSignup(data: AdminSignupData): Promise<AuthResponse> {
     try {
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password
-      })
-
-      if (signUpError) {
-        return { success: false, error: signUpError.message }
+      const users = getUsers()
+      // Check if email already exists
+      if (users.some(u => u.email === data.email)) {
+        return { success: false, error: 'Email already exists' }
       }
 
-      if (!signUpData.user) {
-        return { success: false, error: 'User signup failed' }
-      }
-
-      // Insert profile data into 'profiles' table
-      const { error: profileError } = await supabase.from('profiles').insert({
-        id: signUpData.user.id,
+      const newUser: Admin = {
+        id: generateId(),
         email: data.email,
         username: data.username,
         full_name: data.full_name,
@@ -100,13 +66,12 @@ export class AuthService {
         department: data.department,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
-      })
-
-      if (profileError) {
-        return { success: false, error: profileError.message }
       }
 
-      return { success: true, user: { ...data, id: signUpData.user.id } }
+      users.push(newUser)
+      saveUsers(users)
+
+      return { success: true, user: newUser }
     } catch (error) {
       return { success: false, error: (error as Error).message }
     }
@@ -114,31 +79,15 @@ export class AuthService {
 
   static async adminLogin(credentials: AuthCredentials): Promise<AuthResponse> {
     try {
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: credentials.email,
-        password: credentials.password
-      })
+      const users = getUsers()
+      const user = users.find(u => u.email === credentials.email && 'password' in u && u.password === credentials.password && 'role' in u) as Admin
 
-      if (signInError) {
-        return { success: false, error: signInError.message }
+      if (!user) {
+        return { success: false, error: 'Invalid credentials' }
       }
 
-      if (!signInData.user) {
-        return { success: false, error: 'User login failed' }
-      }
-
-      // Fetch profile data
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', signInData.user.id)
-        .single()
-
-      if (profileError) {
-        return { success: false, error: profileError.message }
-      }
-
-      return { success: true, user: profileData }
+      setCurrentUser(user)
+      return { success: true, user }
     } catch (error) {
       return { success: false, error: (error as Error).message }
     }
@@ -146,39 +95,32 @@ export class AuthService {
 
   // Common Methods
   static async logout(): Promise<void> {
-    await supabase.auth.signOut()
+    setCurrentUser(null)
   }
 
   static async getCurrentUser(): Promise<Student | Admin | null> {
-    try {
-      const user = supabase.auth.getUser()
-      if (!user) return null
-
-      // Fetch profile data
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', (await user).data.user?.id)
-        .single()
-
-      if (profileError) {
-        console.error('Error fetching profile:', profileError)
-        return null
-      }
-
-      return profileData
-    } catch (error) {
-      console.error('Error getting current user:', error)
-      return null
-    }
+    return getCurrentUser()
   }
 
   static async resetPassword(email: string): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email)
-      if (error) {
-        return { success: false, error: error.message }
+      const users = getUsers()
+      const userIndex = users.findIndex(u => u.email === email)
+
+      if (userIndex === -1) {
+        return { success: false, error: 'Email not found' }
       }
+
+      // For local storage, we can prompt for new password or just simulate
+      // In a real app, this would send an email, but since it's local, we'll just update
+      const newPassword = prompt('Enter new password:')
+      if (!newPassword) {
+        return { success: false, error: 'Password reset cancelled' }
+      }
+
+      users[userIndex] = { ...users[userIndex], password: newPassword }
+      saveUsers(users)
+
       return { success: true }
     } catch (error) {
       return { success: false, error: (error as Error).message }

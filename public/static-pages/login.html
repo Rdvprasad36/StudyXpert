@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login-StudyXpert</title>
     <link rel="stylesheet" href="styles/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
   <style>
   body, html {
@@ -317,8 +316,8 @@
         </div>
 
         <form id="loginForm" novalidate>
-          <label for="emailOrRoll">Email</label>
-          <input type="email" id="emailOrRoll" name="emailOrRoll" placeholder="Enter your email" required autocomplete="username" />
+          <label for="emailOrRoll" id="emailOrRollLabel">Email</label>
+          <input type="text" id="emailOrRoll" name="emailOrRoll" placeholder="Enter your email or ID Number" required autocomplete="username" />
           <label for="password">Password</label>
           <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password" />
           <button type="submit" class="submit-btn" id="loginButton">Sign In as Student</button>
@@ -349,15 +348,6 @@
 
     <script>
   document.addEventListener('DOMContentLoaded', async () => {
-    if (!window.supabase) {
-      alert('Supabase library not loaded. Please refresh the page or check your internet connection.');
-      return;
-    }
-    const { createClient } = window.supabase;
-    const supabaseUrl = 'https://jgqltmpfueoxjeoauxcs.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpncWx0bXBmdWVveGplb2F1eGNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5ODI5NzIsImV4cCI6MjA2NzU1ODk3Mn0.Fu7C86_QuZbhyZ1b7tMXZ5MaVbIMmM4oHflFgpJuP90';
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
     const studentTab = document.getElementById('studentTab');
     const adminTab = document.getElementById('adminTab');
     const loginForm = document.getElementById('loginForm');
@@ -368,10 +358,21 @@
     const showLogin = document.getElementById('showLogin');
     const forgotPassword = document.getElementById('forgotPassword');
 
-    console.log('Elements loaded:', { studentTab, adminTab, loginForm, registerForm, loginButton, registerButton, showRegister, showLogin, forgotPassword });
-
     let currentRole = 'student';
     let isLoginMode = true;
+
+    function getUsers() {
+      const users = localStorage.getItem('users');
+      return users ? JSON.parse(users) : [];
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    function generateId() {
+      return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    }
 
     function updateRole(role) {
       currentRole = role;
@@ -391,6 +392,8 @@
         registerForm.style.display = 'none';
         loginForm.style.display = 'block';
         loginButton.textContent = currentRole === 'student' ? 'Sign In as Student' : 'Sign In as Admin';
+        document.getElementById('emailOrRollLabel').textContent = currentRole === 'student' ? 'Email or ID Number' : 'Email';
+        document.getElementById('emailOrRoll').placeholder = currentRole === 'student' ? 'Enter your email or ID Number' : 'Enter your email';
       } else {
         loginForm.style.display = 'none';
         registerForm.style.display = 'block';
@@ -402,74 +405,73 @@
     adminTab.addEventListener('click', () => updateRole('admin'));
 
     showRegister.addEventListener('click', () => {
-      console.log('Show register clicked');
       isLoginMode = false;
       updateForm();
     });
 
     showLogin.addEventListener('click', () => {
-      console.log('Show login clicked');
       isLoginMode = true;
       updateForm();
     });
 
-    forgotPassword.addEventListener('click', async () => {
-      const email = prompt('Please enter your email for password recovery:');
-      if (!email) {
-        alert('Email is required for password recovery.');
+    forgotPassword.addEventListener('click', () => {
+      const promptText = currentRole === 'student' ? 'Please enter your email or ID Number for password recovery:' : 'Please enter your email for password recovery:';
+      const identifier = prompt(promptText);
+      if (!identifier) {
+        alert('Identifier is required for password recovery.');
         return;
       }
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
-      if (error) {
-        alert('Error sending password reset email: ' + error.message);
+      const users = getUsers();
+      let userIndex;
+      if (currentRole === 'student') {
+        userIndex = users.findIndex(u => u.email === identifier || u.student_id === identifier);
       } else {
-        alert('Password reset email sent. Please check your inbox.');
+        userIndex = users.findIndex(u => u.email === identifier);
       }
+      if (userIndex === -1) {
+        alert('Identifier not found.');
+        return;
+      }
+      const newPassword = prompt('Enter new password:');
+      if (!newPassword) {
+        alert('Password reset cancelled.');
+        return;
+      }
+      users[userIndex].password = newPassword;
+      saveUsers(users);
+      alert('Password reset successful.');
     });
 
-    loginForm.addEventListener('submit', async function(event) {
+    loginForm.addEventListener('submit', function(event) {
       event.preventDefault();
-      const emailOrRoll = document.getElementById('emailOrRoll').value.trim();
+      const identifier = document.getElementById('emailOrRoll').value.trim();
       const password = document.getElementById('password').value.trim();
 
-      if (!emailOrRoll || !password) {
-        alert('Please enter both email and password.');
+      if (!identifier || !password) {
+        alert('Please enter both identifier and password.');
         return;
       }
 
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: emailOrRoll,
-          password: password
-        });
-
-        if (error || !data.session) {
-          alert('Login failed: ' + (error ? error.message : 'No session returned'));
-          return;
-        }
-
-        // Fetch profile data
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('email', emailOrRoll)
-          .single();
-
-        if (profileError) {
-          alert('Error fetching profile: ' + profileError.message);
-          return;
-        }
-
-        alert(`Login successful! Welcome, ${profileData.full_name}`);
-        localStorage.setItem('loggedInUser', JSON.stringify(profileData));
-        loginForm.reset();
-        window.location.href = 'index.html';
-      } catch (err) {
-        alert('Login failed: ' + err.message);
+      const users = getUsers();
+      let user;
+      if (currentRole === 'student') {
+        user = users.find(u => (u.email === identifier || u.student_id === identifier) && u.password === password && 'student_id' in u);
+      } else {
+        user = users.find(u => u.email === identifier && u.password === password && 'role' in u);
       }
+
+      if (!user) {
+        alert('Invalid credentials.');
+        return;
+      }
+
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      alert(`Login successful! Welcome, ${user.full_name}`);
+      loginForm.reset();
+      window.location.href = 'index.html';
     });
 
-    registerForm.addEventListener('submit', async function(event) {
+    registerForm.addEventListener('submit', function(event) {
       event.preventDefault();
       const name = document.getElementById('regName').value.trim();
       const username = document.getElementById('regUsername').value.trim();
@@ -489,42 +491,42 @@
         return;
       }
 
-      try {
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: email,
-          password: password
-        });
-
-        if (signUpError || !signUpData.user) {
-          alert('Signup failed: ' + (signUpError ? signUpError.message : 'User creation failed'));
-          return;
-        }
-
-        // Insert profile data into 'profiles' table
-        const { error: profileError } = await supabase.from('profiles').insert({
-          id: signUpData.user.id,
-          email: email,
-          username: username,
-          full_name: name,
-          student_id: idNumber,
-          department: 'General',
-          year: 1,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        });
-
-        if (profileError) {
-          alert('Signup failed: ' + profileError.message);
-          return;
-        }
-
-        alert('Registration successful! You can now log in.');
-        registerForm.reset();
-        isLoginMode = true;
-        updateForm();
-      } catch (err) {
-        alert('Signup failed: ' + err.message);
+      const users = getUsers();
+      if (users.some(u => u.email === email)) {
+        alert('Email already exists.');
+        return;
       }
+
+      const newUser = currentRole === 'student' ? {
+        id: generateId(),
+        email: email,
+        username: username,
+        full_name: name,
+        student_id: idNumber,
+        department: 'General',
+        year: 1,
+        password: password,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      } : {
+        id: generateId(),
+        email: email,
+        username: username,
+        full_name: name,
+        role: 'admin',
+        department: 'General',
+        password: password,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      users.push(newUser);
+      saveUsers(users);
+
+      alert('Registration successful! You can now log in.');
+      registerForm.reset();
+      isLoginMode = true;
+      updateForm();
     });
 
     // Profile functionality
@@ -535,13 +537,13 @@
       return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
     }
 
-    async function checkLoginStatus() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        const user = session.user;
+    function checkLoginStatus() {
+      const user = localStorage.getItem('currentUser');
+      if (user) {
+        const parsedUser = JSON.parse(user);
         document.getElementById('login-btn').style.display = 'none';
         document.getElementById('profile-container').style.display = 'inline-block';
-        document.getElementById('profile-pic').textContent = getInitials(user.user_metadata?.full_name || user.email);
+        document.getElementById('profile-pic').textContent = getInitials(parsedUser.full_name || parsedUser.email);
       } else {
         document.getElementById('login-btn').style.display = 'inline-block';
         document.getElementById('profile-container').style.display = 'none';
@@ -557,9 +559,9 @@
       document.getElementById('dropdown-menu').style.display = 'none';
     });
 
-    document.getElementById('logout-link').addEventListener('click', async (e) => {
+    document.getElementById('logout-link').addEventListener('click', (e) => {
       e.preventDefault();
-      await supabase.auth.signOut();
+      localStorage.removeItem('currentUser');
       document.getElementById('dropdown-menu').style.display = 'none';
       window.location.href = '/static-pages/login.html';
     });
@@ -567,7 +569,7 @@
     // Initialize form
     updateRole('student');
     updateForm();
-    await checkLoginStatus();
+    checkLoginStatus();
   });
 </script>
 </body>

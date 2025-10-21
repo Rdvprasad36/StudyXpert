@@ -1,4 +1,4 @@
-// Authentication types for Supabase integration
+// Authentication types for localStorage integration
 
 export interface Student {
   id: string;
@@ -8,6 +8,7 @@ export interface Student {
   student_id: string;
   department: string;
   year: number;
+  password: string;
   created_at: string;
   updated_at: string;
 }
@@ -19,6 +20,7 @@ export interface Admin {
   full_name: string;
   role: 'admin' | 'super_admin';
   department?: string;
+  password: string;
   created_at: string;
   updated_at: string;
 }

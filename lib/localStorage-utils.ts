@@ -1,5 +1,6 @@
 import type { Viewport } from '@xyflow/react'
 import type { FlowProject } from '@/hooks/use-flow-projects'
+import type { Student, Admin } from './auth-types'
 
 /**
  * Gets the current localStorage usage in bytes and as a percentage of the available space
@@ -290,4 +291,59 @@ export function createDebouncedEdgesSave<EdgeType extends { id: string }>(
   return debounce(() => {
     saveEdgesToProject(project, getEdges(), updateProject)
   }, debounceTime)
+}
+
+// Auth-related localStorage utilities
+
+/**
+ * Gets all users from localStorage
+ */
+export function getUsers(): (Student | Admin)[] {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return []
+  }
+  const users = localStorage.getItem('users')
+  return users ? JSON.parse(users) : []
+}
+
+/**
+ * Saves users to localStorage
+ */
+export function saveUsers(users: (Student | Admin)[]): void {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return
+  }
+  localStorage.setItem('users', JSON.stringify(users))
+}
+
+/**
+ * Gets the current logged-in user
+ */
+export function getCurrentUser(): Student | Admin | null {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return null
+  }
+  const user = localStorage.getItem('currentUser')
+  return user ? JSON.parse(user) : null
+}
+
+/**
+ * Sets the current logged-in user
+ */
+export function setCurrentUser(user: Student | Admin | null): void {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return
+  }
+  if (user) {
+    localStorage.setItem('currentUser', JSON.stringify(user))
+  } else {
+    localStorage.removeItem('currentUser')
+  }
+}
+
+/**
+ * Generates a unique ID
+ */
+export function generateId(): string {
+  return Date.now().toString() + Math.random().toString(36).substr(2, 9)
 }

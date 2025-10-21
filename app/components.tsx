@@ -836,9 +836,6 @@ function HomeComponent() {
               </span>
             </h1>
             <div className='text-center space-y-3 mb-8'>
-              <p className='text-gray-600 dark:text-muted-foreground'>
-                Open source alternative to Deep Research. Generate reports with AI based on search results.
-              </p>
               <div className='flex flex-wrap justify-center items-center gap-2'>
                 <Button
                   variant='default'
